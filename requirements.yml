@@ -112,8 +112,9 @@ roles:
 
   - src: ome.versioncontrol_utils
     version: 1.0.2
-
-  - src: idr.redmine_tracker
+  
+  - name: sco.create_instance
+  - src: https://github.com/steveo-sudo/ansible-role-create-instance/archive/0.1.0.tar.gz
     version: 0.1.0
 
 collections:
