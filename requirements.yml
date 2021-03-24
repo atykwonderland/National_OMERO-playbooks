@@ -13,8 +13,10 @@ roles:
   - src: ome.docker
     version: 3.1.1
 
-  - src: ome.ice
-    version: 4.2.0
+#  - src: ome.ice
+#    version: 4.2.0
+  - name: ome.ice
+    src: https://github.com/steveo-sudo/ansible-role-ice/archive/ 
 
   - src: ome.java
     version: 2.1.0
