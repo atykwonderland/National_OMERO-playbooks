@@ -15,8 +15,8 @@ roles:
 
 #  - src: ome.ice
 #    version: 4.2.0
-  - name: ome.ice
-    src: https://github.com/steveo-sudo/ansible-role-ice/archive/ 
+  - name: sco.ice
+    src: https://github.com/steveo-sudo/ansible-role-ice/archive/0.1.0.tar.gz 
 
   - src: ome.java
     version: 2.1.0
