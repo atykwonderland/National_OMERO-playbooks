@@ -114,7 +114,7 @@ roles:
     version: 1.0.2
   
   - name: sco.create_instance
-  - src: https://github.com/Steveo-sudo/ansible-role-create-instance/archive/refs/tags/0.1.0.tar.gz
+  - src: https://github.com/SteveO-sudo/ansible-role-create-instance/archive/refs/tags/0.1.0.tar.gz
     version: 0.1.0
 
 collections:
