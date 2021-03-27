@@ -1,34 +1,17 @@
 ---
 # ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
 
-# For new hosts you may also need to run the bootstrap playbook to setup
-# networking and initial partitions:
-#- include: bootstrap/playbook.yml
+# For new hosts you need to create them in Compute Candada's openstack cloud
+# infrastructure. requires a named cloud "compute_canada" that refers to a
+# clouds.yaml file with authentication credentials specific for that cloud.
+#- import_role: sco.create_instance
 
-# deployment of two OMERO.web instances for hosting Dundee's production OMERO.
-# One of the two instances is for publication data ("ns-web-pub").
-- include: nightshade-webclients.yml
+# deployment of xxx.med.ualberta.ca production OMERO.server. This is currently
+# a one-node server hosting the db_server, omero_server and web_server from 
+# a single instance
+- include: productionServer.yml
 
-# nightshade.openmicroscopy.org OMERO.server
-- include: ome-dundeeomero.yml
+# deployment of a training server. Single node
+- include: trainingServer.yml
 
-# https://demo.openmicroscopy.org OMERO.server and OMERO.web
-- include: ome-demoserver.yml
-
-# Firewall configuration for all UoD OMERO servers
-# The training-server playbooks modify the firewall configuration so this must
-# be run first to setup the basic rules
-- include: omero/omero-firewall.yml
-
-# https://outreach.openmicroscopy.org
-# https://workshop.openmicroscopy.org
-- include: omero/training-server/playbook.yml
-
-# Internal monitoring configuration for all UoD OMERO servers
-- include: omero/omero-monitoring-agents.yml
-
-# https://www.openmicroscopy.org/
-- include: www/playbook.yml
-
-# OME proxied service
-- include: web-proxy/playbook.yml
+# Internal monitoring configuration for all OMERO servers
