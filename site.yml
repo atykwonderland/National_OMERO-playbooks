@@ -1,0 +1,34 @@
+---
+# ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
+
+# For new hosts you may also need to run the bootstrap playbook to setup
+# networking and initial partitions:
+#- include: bootstrap/playbook.yml
+
+# deployment of two OMERO.web instances for hosting Dundee's production OMERO.
+# One of the two instances is for publication data ("ns-web-pub").
+- include: nightshade-webclients.yml
+
+# nightshade.openmicroscopy.org OMERO.server
+- include: ome-dundeeomero.yml
+
+# https://demo.openmicroscopy.org OMERO.server and OMERO.web
+- include: ome-demoserver.yml
+
+# Firewall configuration for all UoD OMERO servers
+# The training-server playbooks modify the firewall configuration so this must
+# be run first to setup the basic rules
+- include: omero/omero-firewall.yml
+
+# https://outreach.openmicroscopy.org
+# https://workshop.openmicroscopy.org
+- include: omero/training-server/playbook.yml
+
+# Internal monitoring configuration for all UoD OMERO servers
+- include: omero/omero-monitoring-agents.yml
+
+# https://www.openmicroscopy.org/
+- include: www/playbook.yml
+
+# OME proxied service
+- include: web-proxy/playbook.yml
