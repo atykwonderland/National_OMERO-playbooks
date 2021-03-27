@@ -3,9 +3,10 @@
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
 - hosts: localhost
+  vars:
+    create_compute_instance: True
   roles:
-    - role: openstack.create_instance
-      create_compute_instance: True
+    - role: sco.create_instance
       create_new_volume: True     
       floating_ip: 206.12.92.91
       image: "Ubuntu-20.04-Focal-x64-2020-12"
@@ -16,6 +17,7 @@
       volume_description: "data repository for omero production server"     
       volume_size_gb: 100
       device: "/dev/vdb"
+    when: create_compute_instance: True  
           
 
           
