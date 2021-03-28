@@ -5,6 +5,18 @@
 # infrastructure. requires a named cloud "compute_canada" that refers to a
 # clouds.yaml file with authentication credentials specific for that cloud.
 #- import_role: sco.create_instance
+#  vars:
+#    create_new_volume: False     
+#    floating_ip: ''
+#    flavour: "p4-6gb"
+#    image: Ubuntu-20.04-Focal-x64-2020-12
+#    server_name: "new_server"
+#    description: ''
+#    keypair: "SteveOKeyPairCCOMERO"
+#    network: "def-steveogg-dev-network"
+#    volume_name: "new_volume"     
+#    volume_size_gb: 100
+#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
 
 # deployment of xxx.med.ualberta.ca production OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
