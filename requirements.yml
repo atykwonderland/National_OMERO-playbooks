@@ -113,8 +113,8 @@ roles:
   - src: ome.versioncontrol_utils
     version: 1.0.2
   
-  - name: sco.create_instance
-    src: https://github.com/stephenogg/ansible-role-create-instance
+  - name: sco.letsencrypt
+    src: https://github.com/stephenogg/ansible-role-letsencrypt
     version: 0.1.0
 
 collections:
