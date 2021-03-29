@@ -1,26 +1,8 @@
 ---
-# Deploy server(s) on Ubuntu 20.04. First task creates and launches an instance.
+# Deploy server(s) on Ubuntu 20.04.
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
-- hosts: localhost
-  vars:
-    create_compute_instance: True
-  roles:
-    - role: sco.create_instance
-      create_new_volume: True     
-      floating_ip: 206.12.92.91
-      image: "Ubuntu-20.04-Focal-x64-2020-12"
-      flavour: "p8-12gb"
-      server_name: "OMERO"
-      keypair: "SteveOKeyPairCCOMERO"
-      volume_name: "binary_repository"
-      volume_description: "data repository for omero production server"     
-      volume_size_gb: 100
-      device: "/dev/vdb"
-    when: create_compute_instance: True  
-          
 
-          
 - hosts: omero   # this is defined as 206.12.92.91 (and mapped to omerocloud.med.ualberta.ca
                     #by Ualberta) in the inventory
   gather_facts: False
