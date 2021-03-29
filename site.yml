@@ -21,9 +21,9 @@
 # deployment of xxx.med.ualberta.ca production OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
 # a single instance
-- include: productionServer.yml
+- import_playbook: productionServer.yml
 
 # deployment of a training server. Single node
-- include: trainingServer.yml
+- import_playbook: trainingServer.yml
 
 # Internal monitoring configuration for all OMERO servers
