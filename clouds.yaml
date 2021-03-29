@@ -1,0 +1,13 @@
+clouds:
+  computecanada_arbutus:
+    auth:
+      auth_url: https://arbutus.cloud.computecanada.ca:5000/v3
+      project_name: def-steveogg-dev
+      username: steveogg
+      user_domain_name: CCDB
+      project_domain_id: e05dc10d20cf47f38ce2443f4c0d7ee5
+      project_id: de23f10380ca4c16bbf052cbe3c5ea73
+      password: xxxxxxxx
+    region_name: RegionOne
+    interface: public
+    identity_api_version: 3
