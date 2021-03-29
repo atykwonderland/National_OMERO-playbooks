@@ -1,17 +1,17 @@
 ---
-
-# Run this from a hosts directive using the "Localhost" in a playbook to create an
-# openstack instance, and modify the ~/.ssh/known_hosts file, so that you can configure the
-# instance using ansible without any manual intervention - i.e. you won't have to click
-# "yes" to the host key checking question.
-    
-- name: Create a Compute Instance, update local known_hosts with new ssh fingerprint
+# Requires opensstack.cloud community collection to create resources on an openstack system.
+# Uses authentication information placed into a clouds.yaml file that defines a named cloud:
+# "computecanada_arbutus". Auth information is driven by openstacksdk, which means that values
+# can come from a yaml config file in /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml
+# or ~/.config/openstack/clouds.yaml.
+- name: Create a Compute Instance, Add security groups, and update local known_hosts with new ssh fingerprint
+  hosts: localhost
   block:
     - name: create an instance
       openstack.cloud.server:
         state: present
-        cloud: computecanada_arbutus #connection information defined in cloud.yaml
-        name: "{{ server_name }}"    # I put this into ~/.config/openstack/
+        cloud: computecanada_arbutus
+        name: "{{ server_name }}"
         description: "{{ description }}"
         image: "{{ image }}"
         reuse_ips: false
@@ -19,21 +19,66 @@
         timeout: 200
         flavor: "{{ flavour }}"
         network: "{{ network }}" 
-        security_groups:
-          - default
-          - web
-          - ssh
-          - omero
-          - ping        
+        security_groups: default      
         floating_ips:
           - "{{ floating_ip }}"
-
-# Pause to allow network time to activate (10s is too short)                
-    - name: Pause to allow network to become active
-      pause:
-        seconds: 30
-       
-    - name: remove the ip address SSH key from the local known_hosts file to prevent timeout below
+        
+    - name: Create Security Groups for OMERO, Web, ping and ssh
+      openstack.cloud.security_group:
+        cloud: computecanada_arbutus
+        state: present
+        name: "{{ item }}"
+      with_items:
+        - web
+        - ping
+        - omero
+        - ssh
+        
+    - name: Add security group rules for web security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: web
+        protocol: tcp
+        port_range_min: "{{ item }}"
+        port_range_max: "{{ item }}"
+        remote_ip_prefix: 0.0.0.0/0
+      with_items:
+        - 80
+        - 443
+        
+    - name: Add security group rules for OMERO security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: omero
+        protocol: tcp
+        port_range_min: "{{ item }}"
+        port_range_max: "{{ item }}"
+        remote_ip_prefix: 0.0.0.0/0
+      with_items:
+        - 4063
+        - 4064
+        
+    - name: Add security group rules for ssh security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: ssh
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: "{{ item }}"
+      with_items:
+        - 172.103.141.33/22 #home range of ip addresses possible
+        - 142.X.X.X/24.     # work range of ip addresses possible
+        
+    - name: Add security group rules for ping security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: ping
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0      
+        
+      
+    - name: remove the ip address SSH key from the local known_hosts file in case of ip reuse
       known_hosts:
         state: absent
         host: "{{ floating_ip }}"
@@ -75,6 +120,7 @@
 
 #----------------------------------      BEGIN create new volume      --------------------       
 - name: Create and Attach a New Openstack CINDR  Volume to the instance created above
+  hosts: localhost
   block:
     - name: create a new CINDER volume
       openstack.cloud.volume:
