@@ -2,19 +2,35 @@
 # ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
 
 # For new hosts you need to create them in Compute Candada's openstack cloud
-# infrastructure. requires a named cloud "compute_canada" that refers to a
+# infrastructure. requires a named cloud "arbutus_computecanada" that refers to a
 # clouds.yaml file with authentication credentials specific for that cloud.
+#Create Production Server
 #- import_playbook: createInstance.yml
 #  vars:
-#    create_new_volume: False     
-#    floating_ip: ''
-#    flavour: "p4-6gb"
+#    create_new_volume: True     
+#    floating_ip: 206.12.92.91
+#    flavour: "p8-12gb"
 #    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "new_server"
-#    description: ''
+#    server_name: "OMERO"
+#    description: "University of Alberta's production OMERO server"
 #    keypair: "SteveOKeyPairCCOMERO"
 #    network: "def-steveogg-dev-network"
-#    volume_name: "new_volume"     
+#    volume_name: "binary_repository"     
+#    volume_size_gb: 100
+#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
+
+#Create Training Server
+#- import_playbook: createInstance.yml
+#  vars:
+#    create_new_volume: True     
+#    floating_ip: 206.12.95.221
+#    flavour: "p4-6gb"
+#    image: Ubuntu-20.04-Focal-x64-2020-12
+#    server_name: "OMERO Training"
+#    description: "OMERO server used for training workshops"
+#    keypair: "SteveOKeyPairCCOMERO"
+#    network: "def-steveogg-dev-network"
+#    volume_name: "binary_repository"     
 #    volume_size_gb: 100
 #    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
 
