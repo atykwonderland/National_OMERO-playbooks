@@ -4,7 +4,7 @@
 # For new hosts you need to create them in Compute Candada's openstack cloud
 # infrastructure. requires a named cloud "compute_canada" that refers to a
 # clouds.yaml file with authentication credentials specific for that cloud.
-#- import_role: sco.create_instance
+#- import_playbook: createInstance.yml
 #  vars:
 #    create_new_volume: False     
 #    floating_ip: ''
