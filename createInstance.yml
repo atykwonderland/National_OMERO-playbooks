@@ -7,6 +7,60 @@
 - name: Create a Compute Instance, Add security groups, and update local known_hosts with new ssh fingerprint
   hosts: localhost
   block:
+    - name: Create Security Groups for OMERO, Web, ping and ssh
+      openstack.cloud.security_group:
+        cloud: computecanada_arbutus
+        state: present
+        name: "{{ item }}"
+      with_items:
+        - web
+        - ping
+        - omero
+        - ssh
+        
+    - name: Add security group rules for web security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: web
+        protocol: tcp
+        port_range_min: "{{ item }}"
+        port_range_max: "{{ item }}"
+        remote_ip_prefix: 0.0.0.0/0
+      with_items:
+        - 80
+        - 443
+        
+    - name: Add security group rules for OMERO security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: omero
+        protocol: tcp
+        port_range_min: "{{ item }}"
+        port_range_max: "{{ item }}"
+        remote_ip_prefix: 0.0.0.0/0
+      with_items:
+        - 4063
+        - 4064
+        
+    - name: Add security group rules for ssh security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: ssh
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: "{{ item }}"
+      with_items:
+        - 172.103.141.33/22 #home range of ip addresses possible
+        - 142.X.X.X/24.     # work range of ip addresses possible
+        
+    - name: Add security group rules for ping security group
+      openstack.cloud.security_group_rule:
+        cloud: computecanada_arbutus
+        security_group: ping
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0      
+  
     - name: create an instance
       openstack.cloud.server:
         state: present
@@ -19,9 +73,14 @@
         timeout: 200
         flavor: "{{ flavour }}"
         network: "{{ network }}" 
-        security_groups: default      
+        security_groups: "{{ item }}"      
         floating_ips:
           - "{{ floating_ip }}"
+      with_items:
+        - default
+        - web
+        - omero
+        - ping
         
     - name: Create Security Groups for OMERO, Web, ping and ssh
       openstack.cloud.security_group:
