@@ -3,9 +3,7 @@
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-- hosts: omero   # this is defined as 206.12.92.91 (and mapped to omerocloud.med.ualberta.ca
-                    #by Ualberta) in the inventory
-  gather_facts: False
+- hosts: omero
   vars:
     https_certificate_domain: "omerocloud.med.ualberta.ca"
     postgresql_version: "12"
@@ -77,15 +75,6 @@
 
   pre_tasks:
   
-    - name: Wait for connection to become available, but don't even start checking for 5 seconds
-      wait_for_connection:
-        delay: 5
-        timeout: 120
-        
-    - name: Gather Facts
-      setup:      
- 
- 
 # Assume this is a new server, therefore no cert exists at:
 # /etc/letsencrypt/live/{{ https_cert_domain }}. But, if I'm reusing this public IP, then
 # there may already be a certificate. Normally, I copy the directory /etc/letsencrypt to
@@ -153,7 +142,7 @@
           - wget
           - bc
           - cron
-          - software-properties-common
+         #- software-properties-common
           - openssl
         state: present
         
@@ -186,7 +175,7 @@
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
       
-    - name: letsencrypt challenge directory
+    - name: create letsencrypt challenge directory for later use
       become: yes
       file:
         path: /srv/www/letsencrypt/.well-known/
@@ -213,10 +202,13 @@
         databases: [omero]
         
         
+# Explicitly install ome.ice to create the symlinks
+    - role: ome.ice
+      ice_binaries_symlink_dest: "/usr/local/bin"
+      
 #Install the OMERO.server into /opt/omero/server
-# Also depends on roles - ome.ice, ome.java, ome.basedeps, ome.python3_virtualenv
+# Also depends on roles - ome.ice, ome.java, ome.basedeps, ome.python3_virtualenv      
     - role: ome.omero_server
-      omero_server_virtualenv: yes
       omero_server_python_addons:
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
