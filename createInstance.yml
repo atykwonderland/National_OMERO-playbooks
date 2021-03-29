@@ -1,0 +1,94 @@
+---
+
+# Run this from a hosts directive using the "Localhost" in a playbook to create an
+# openstack instance, and modify the ~/.ssh/known_hosts file, so that you can configure the
+# instance using ansible without any manual intervention - i.e. you won't have to click
+# "yes" to the host key checking question.
+    
+- name: Create a Compute Instance, update local known_hosts with new ssh fingerprint
+  block:
+    - name: create an instance
+      openstack.cloud.server:
+        state: present
+        cloud: computecanada_arbutus #connection information defined in cloud.yaml
+        name: "{{ server_name }}"    # I put this into ~/.config/openstack/
+        description: "{{ description }}"
+        image: "{{ image }}"
+        reuse_ips: false
+        key_name: "{{ keypair }}"
+        timeout: 200
+        flavor: "{{ flavour }}"
+        network: "{{ network }}" 
+        security_groups:
+          - default
+          - web
+          - ssh
+          - omero
+          - ping        
+        floating_ips:
+          - "{{ floating_ip }}"
+
+# Pause to allow network time to activate (10s is too short)                
+    - name: Pause to allow network to become active
+      pause:
+        seconds: 30
+       
+    - name: remove the ip address SSH key from the local known_hosts file to prevent timeout below
+      known_hosts:
+        state: absent
+        host: "{{ floating_ip }}"
+ 
+    - name: remove the fqdn SSH key from the local known_hosts file to prevent timeout below
+      known_hosts:
+        state: absent
+        host: "{{floating_ip.split('.')[0]}}-{{floating_ip.split('.')[1]}}-\
+        {{floating_ip.split('.')[2]}}-{{floating_ip.split('.')[3]}}.\
+        cloud.computecanada.ca"
+                       
+    - name: get new fqdn fingerprint so we can ssh to new instance without intervention
+      shell: "ssh-keyscan -t rsa {{floating_ip.split('.')[0]}}-{{floating_ip.split('.')[1]}}-\
+        {{floating_ip.split('.')[2]}}-{{floating_ip.split('.')[3]}}.\
+        cloud.computecanada.ca"
+      register: output1
+ 
+    - name: Add this new key to the localhost's known_hosts file to allow connection from ansible
+      known_hosts:
+        state: present
+        name: "{{floating_ip.split('.')[0]}}-{{floating_ip.split('.')[1]}}-\
+        {{floating_ip.split('.')[2]}}-{{floating_ip.split('.')[3]}}.\
+        cloud.computecanada.ca"
+        key: "{{ output1.stdout_lines[0] }}"
+        path: "~/.ssh/known_hosts"    
+ 
+    - name: get key ip address fingerprint for new instance
+      shell: "ssh-keyscan -t rsa {{ floating_ip }}"
+      register: output2
+
+    - name: Add this new key to the localhost's known_hosts file to allow connection from ansible
+      known_hosts:
+        state: present
+        name: "{{ floating_ip }}"
+        key: "{{ output2.stdout_lines[0] }}"
+        path: "~/.ssh/known_hosts"
+  
+#----------------------------------      END create new instance      --------------------      
+
+#----------------------------------      BEGIN create new volume      --------------------       
+- name: Create and Attach a New Openstack CINDR  Volume to the instance created above
+  block:
+    - name: create a new CINDER volume
+      openstack.cloud.volume:
+        cloud: computecanada_arbutus
+        state: present
+        size:  "{{ volume_size_gb }}"   #(in Gb)
+        display_name: "{{ volume_name }}"
+        display_description: "{{ volume_description }}"
+        
+    - name: "Attach Volume: {{ volume_name }} to Server: {{ server_name }} on {{ device }}"
+      openstack.cloud.server_volume:
+        cloud: computecanada_arbutus
+        state: present
+        server: "{{ server_name }}"
+        volume: "{{ volume_name }}"
+        device: "{{ device }}"
+  when: create_new_volume == True
