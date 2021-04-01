@@ -1,5 +1,5 @@
 ---
-# Requires opensstack.cloud community collection to create resources on an openstack system.
+# Requires openstack.cloud community collection to create resources on an openstack system.
 # Uses authentication information placed into a clouds.yaml file that defines a named cloud:
 # "computecanada_arbutus". Auth information is driven by openstacksdk, which means that values
 # can come from a yaml config file in /etc/ansible/openstack.yaml, /etc/openstack/clouds.yaml
