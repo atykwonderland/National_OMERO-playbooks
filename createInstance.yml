@@ -51,8 +51,8 @@
         port_range_max: 22
         remote_ip_prefix: "{{ item }}"
       with_items:
-        - 172.103.141.33/22 #home range of ip addresses possible
-        - 142.X.X.X/24.     # work range of ip addresses possible
+        - 172.103.141.33/24 #home range of ip addresses possible
+        - 142.244.23.105/24 # work range of ip addresses possible
         
     - name: Add security group rules for ping security group
       openstack.cloud.security_group_rule:
@@ -85,7 +85,7 @@
 
         
       
-    - name: remove the ip address SSH key from the local known_hosts file in case of ip reuse
+    - name: remove the ip address SSH fingerprint from the local known_hosts file in case of ip reuse
       known_hosts:
         state: absent
         host: "{{ floating_ip }}"
