@@ -1,8 +1,8 @@
 ---
 # ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
 
-# For new hosts you need to create them in Compute Candada's openstack cloud
-# infrastructure. requires a named cloud "computecanada_arbutus" that refers to a
+# New hosts are created in Compute Candada's openstack cloud
+# infrastructure. requires a named cloud "computecanada_arbutus" that is defined in
 # clouds.yaml file with authentication credentials specific for that cloud.
 #Create Production Server
 #- import_playbook: createInstance.yml
