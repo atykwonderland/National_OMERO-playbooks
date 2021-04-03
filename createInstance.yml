@@ -9,7 +9,7 @@
   block:
     - name: Create Security Groups for OMERO, Web, ping and ssh
       openstack.cloud.security_group:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         state: present
         name: "{{ item }}"
       with_items:
@@ -20,7 +20,7 @@
         
     - name: Add security group rules for web security group
       openstack.cloud.security_group_rule:
-        cloud: computecanada_arbutus
+        cloud: c"{{ cloud }}"
         security_group: web
         protocol: tcp
         port_range_min: "{{ item }}"
@@ -32,7 +32,7 @@
         
     - name: Add security group rules for OMERO security group
       openstack.cloud.security_group_rule:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         security_group: omero
         protocol: tcp
         port_range_min: "{{ item }}"
@@ -44,7 +44,7 @@
         
     - name: Add security group rules for ssh security group
       openstack.cloud.security_group_rule:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         security_group: ssh
         protocol: tcp
         port_range_min: 22
@@ -56,7 +56,7 @@
         
     - name: Add security group rules for ping security group
       openstack.cloud.security_group_rule:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         security_group: ping
         protocol: icmp
         remote_ip_prefix: 0.0.0.0/0      
@@ -64,7 +64,7 @@
     - name: create an instance
       openstack.cloud.server:
         state: present
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         name: "{{ server_name }}"
         description: "{{ description }}"
         image: "{{ image }}"
@@ -131,7 +131,7 @@
   block:
     - name: create a new CINDER volume
       openstack.cloud.volume:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         state: present
         size:  "{{ volume_size_gb }}"   #(in Gb)
         display_name: "{{ volume_name }}"
@@ -139,7 +139,7 @@
         
     - name: "Attach Volume: {{ volume_name }} to Server: {{ server_name }} on {{ device }}"
       openstack.cloud.server_volume:
-        cloud: computecanada_arbutus
+        cloud: "{{ cloud }}"
         state: present
         server: "{{ server_name }}"
         volume: "{{ volume_name }}"
