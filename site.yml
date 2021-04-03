@@ -7,6 +7,7 @@
 #Create Production Server
 #- import_playbook: createInstance.yml
 #  vars:
+#    cloud: cc_arbutus_default
 #    create_new_volume: True     
 #    floating_ip: 206.12.92.91
 #    flavour: "p8-12gb"
@@ -22,6 +23,7 @@
 #Create Training Server
 #- import_playbook: createInstance.yml
 #  vars:
+#    cloud: cc_arbutus_default
 #    create_new_volume: True     
 #    floating_ip: 206.12.95.221
 #    flavour: "p4-6gb"
@@ -33,7 +35,37 @@
 #    volume_name: "binary_repository"     
 #    volume_size_gb: 100
 #    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
+#Create National Production Server
+#- import_playbook: createInstance.yml
+#  vars:
+#    cloud: cc_arbutus_rpp
+#    create_new_volume: True     
+#    floating_ip: 
+#    flavour: "p8-12gb"
+#    image: Ubuntu-20.04-Focal-x64-2020-12
+#    server_name: "OMERO"
+#    description: "Canadian National production OMERO server"
+#    keypair: "SteveOKeyPairCCOMERO"
+#    network: "rpp-steveogg-network"
+#    volume_name: "binary_repository"     
+#    volume_size_gb: 100
+#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
 
+#Create Training Server
+#- import_playbook: createInstance.yml
+#  vars:
+#    cloud: cc_arbutus_rpp
+#    create_new_volume: True     
+#    floating_ip:
+#    flavour: "p4-6gb"
+#    image: Ubuntu-20.04-Focal-x64-2020-12
+#    server_name: "OMERO Development"
+#    description: "OMERO server used to test new functionality"
+#    keypair: "SteveOKeyPairCCOMERO"
+#    network: "rpp-steveogg-network"
+#    volume_name: "binary_repository"     
+#    volume_size_gb: 100
+#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
 # deployment of xxx.med.ualberta.ca production OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
 # a single instance
