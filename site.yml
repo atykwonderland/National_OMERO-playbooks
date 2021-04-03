@@ -2,13 +2,16 @@
 # ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
 
 # New hosts are created in Compute Candada's openstack cloud
-# infrastructure. requires a named cloud "computecanada_arbutus" that is defined in
-# clouds.yaml file with authentication credentials specific for that cloud.
-#Create Production Server
+# infrastructure. requires a named cloud "cc_arbutus_rep or cc_arbutus_default"
+# that is defined in clouds.yaml file with authentication credentials specific
+# for that cloud/project. Create Instance with optional second disk mounted on
+# /dev/vdb to act as the OMERO binary repository.
+
+#UofA production
 #- import_playbook: createInstance.yml
 #  vars:
 #    cloud: cc_arbutus_default
-#    create_new_volume: True     
+#    create_second_volume: True     
 #    floating_ip: 206.12.92.91
 #    flavour: "p8-12gb"
 #    image: Ubuntu-20.04-Focal-x64-2020-12
@@ -18,13 +21,14 @@
 #    network: "def-steveogg-dev-network"
 #    volume_name: "binary_repository"     
 #    volume_size_gb: 100
-#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
+#    device: "/dev/vdb"
+# # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
 #Create Training Server
 #- import_playbook: createInstance.yml
 #  vars:
 #    cloud: cc_arbutus_default
-#    create_new_volume: True     
+#    create_second_volume: True     
 #    floating_ip: 206.12.95.221
 #    flavour: "p4-6gb"
 #    image: Ubuntu-20.04-Focal-x64-2020-12
@@ -34,28 +38,32 @@
 #    network: "def-steveogg-dev-network"
 #    volume_name: "binary_repository"     
 #    volume_size_gb: 100
-#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
-#Create National Production Server
-#- import_playbook: createInstance.yml
-#  vars:
-#    cloud: cc_arbutus_rpp
-#    create_new_volume: True     
-#    floating_ip: 
-#    flavour: "p8-12gb"
-#    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "OMERO"
-#    description: "Canadian National production OMERO server"
-#    keypair: "SteveOKeyPairCCOMERO"
-#    network: "rpp-steveogg-network"
-#    volume_name: "binary_repository"     
-#    volume_size_gb: 100
-#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
+#    device: "/dev/vdb"
+# # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
-#Create Training Server
+#Create National Production Server
+ - import_playbook: createInstance.yml
+   vars:
+     cloud: cc_arbutus_rpp
+     create_second_volume: True     
+     floating_ip: 206.12.94.73
+     flavour: "p8-12gb"
+     image: Ubuntu-20.04-Focal-x64-2020-12
+     server_name: "National OMERO"
+     #server_description: "Canadian National production OMERO server"
+     keypair: "SteveOKeyPairCCOMERO"
+     network: "rpp-steveogg-network"
+     volume_name: "binary_repository"     
+     volume_size_gb: 100
+     volume_description: "Volume to use as the OMERO binary repository"
+     device: "/dev/vdb"
+# # instance defined to boot from a 100Gb disk mounted on /dev/vda
+
+#Create Development Server
 #- import_playbook: createInstance.yml
 #  vars:
 #    cloud: cc_arbutus_rpp
-#    create_new_volume: True     
+#    create_second_volume: True     
 #    floating_ip:
 #    flavour: "p4-6gb"
 #    image: Ubuntu-20.04-Focal-x64-2020-12
@@ -65,13 +73,19 @@
 #    network: "rpp-steveogg-network"
 #    volume_name: "binary_repository"     
 #    volume_size_gb: 100
-#    device: "/dev/vdb"  # each flavor already has a 20Gb disk mounted on /dev/vda
-# deployment of xxx.med.ualberta.ca production OMERO.server. This is currently
+#    device: "/dev/vdb"
+# # instance defined to boot from a 100Gb disk mounted on /dev/vda
+
+# Configure of omero.med.ualberta.ca production OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
 # a single instance
-- import_playbook: productionServer.yml
+#- hosts: omero
+#  import_playbook: productionServer.yml
+#  vars:
+   
+
 
 # deployment of a training server. Single node
-- import_playbook: trainingServer.yml
+#- import_playbook: trainingServer.yml
 
 # Internal monitoring configuration for all OMERO servers

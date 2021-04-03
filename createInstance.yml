@@ -6,68 +6,73 @@
 # or ~/.config/openstack/clouds.yaml.
 - name: Create a Compute Instance, Add security groups, and update local known_hosts with new ssh fingerprint
   hosts: localhost
-  block:
-    - name: Create Security Groups for OMERO, Web, ping and ssh
-      openstack.cloud.security_group:
-        cloud: "{{ cloud }}"
-        state: present
-        name: "{{ item }}"
-      with_items:
-        - web
-        - ping
-        - omero
-        - ssh
-        
-    - name: Add security group rules for web security group
-      openstack.cloud.security_group_rule:
-        cloud: c"{{ cloud }}"
-        security_group: web
-        protocol: tcp
-        port_range_min: "{{ item }}"
-        port_range_max: "{{ item }}"
-        remote_ip_prefix: 0.0.0.0/0
-      with_items:
-        - 80
-        - 443
-        
-    - name: Add security group rules for OMERO security group
-      openstack.cloud.security_group_rule:
-        cloud: "{{ cloud }}"
-        security_group: omero
-        protocol: tcp
-        port_range_min: "{{ item }}"
-        port_range_max: "{{ item }}"
-        remote_ip_prefix: 0.0.0.0/0
-      with_items:
-        - 4063
-        - 4064
-        
-    - name: Add security group rules for ssh security group
-      openstack.cloud.security_group_rule:
-        cloud: "{{ cloud }}"
-        security_group: ssh
-        protocol: tcp
-        port_range_min: 22
-        port_range_max: 22
-        remote_ip_prefix: "{{ item }}"
-      with_items:
-        - 172.103.141.33/24 #home range of ip addresses possible
-        - 142.244.23.105/24 # work range of ip addresses possible
-        
-    - name: Add security group rules for ping security group
-      openstack.cloud.security_group_rule:
-        cloud: "{{ cloud }}"
-        security_group: ping
-        protocol: icmp
-        remote_ip_prefix: 0.0.0.0/0      
-  
+  tasks:
+#Adding security group rules is broken in openstacksdk/ansible due to new "remote_address_group_id"
+# which gets set even if the tasks don't use it. Openstack then thinks this is a problem.
+    
+#    - name: Create Security Groups for OMERO, Web, ping and ssh
+#      openstack.cloud.security_group:
+#        cloud: "{{ cloud }}"
+#        state: present
+#        name: "{{ item }}"
+#      with_items:
+#        - web
+#        - ping
+#        - omero
+#        - ssh
+#        
+#    - name: Add security group rules for web security group
+#      openstack.cloud.security_group_rule:
+#        cloud: "{{ cloud }}"
+#        security_group: web
+#        protocol: tcp
+#        port_range_min: "{{ item }}"
+#        port_range_max: "{{ item }}"
+#        remote_ip_prefix: 0.0.0.0/0
+#      with_items:
+#        - 80
+#        - 443
+#    
+#    - name: Add security group rules for OMERO security group
+#      openstack.cloud.security_group_rule:
+#        cloud: "{{ cloud }}"
+#        security_group: omero
+#        protocol: tcp
+#        port_range_min: "{{ item }}"
+#        port_range_max: "{{ item }}"
+#        remote_ip_prefix: 0.0.0.0/0
+#      with_items:
+#        - 4063
+#        - 4064
+#    
+#    - name: Add security group rules for ssh security group
+#      openstack.cloud.security_group_rule:
+#        cloud: "{{ cloud }}"
+#        security_group: ssh
+#        protocol: tcp
+#        port_range_min: 22
+#        port_range_max: 22
+#        remote_ip_prefix: "{{ item }}"
+#      with_items:
+#        - 172.103.141.33/26 #home range of ip addresses possible
+#        - 142.244.23.105/24 # work range of ip addresses possible
+#    
+#    - name: Add security group rules for ping security group
+#      openstack.cloud.security_group_rule:
+#        cloud: "{{ cloud }}"
+#        security_group: ping
+#        protocol: icmp
+#        remote_ip_prefix: 0.0.0.0/0      
+
     - name: create an instance
       openstack.cloud.server:
         state: present
         cloud: "{{ cloud }}"
         name: "{{ server_name }}"
-        description: "{{ description }}"
+        #description: "{{ server_description }}"
         image: "{{ image }}"
+        boot_from_volume: true
+        volume_size: 100
         reuse_ips: false
         key_name: "{{ keypair }}"
         timeout: 200
@@ -81,7 +86,8 @@
         - web
         - omero
         - ping
-        
+        - ssh
+    
 
         
       
@@ -126,22 +132,24 @@
 #----------------------------------      END create new instance      --------------------      
 
 #----------------------------------      BEGIN create new volume      --------------------       
-- name: Create and Attach a New Openstack CINDR  Volume to the instance created above
+- name: Create and Attach a New Openstack CINDR Volume to the instance created above
   hosts: localhost
-  block:
-    - name: create a new CINDER volume
-      openstack.cloud.volume:
-        cloud: "{{ cloud }}"
-        state: present
-        size:  "{{ volume_size_gb }}"   #(in Gb)
-        display_name: "{{ volume_name }}"
-        display_description: "{{ volume_description }}"
+  tasks:
+    - name: Block of events to create new volume and attach it.
+      block:
+        - name: create a new CINDER volume
+          openstack.cloud.volume:
+            cloud: "{{ cloud }}"
+            state: present
+            size:  "{{ volume_size_gb }}"   #(in Gb)
+            display_name: "{{ volume_name }}"
+            display_description: "{{ volume_description }}"
         
-    - name: "Attach Volume: {{ volume_name }} to Server: {{ server_name }} on {{ device }}"
-      openstack.cloud.server_volume:
-        cloud: "{{ cloud }}"
-        state: present
-        server: "{{ server_name }}"
-        volume: "{{ volume_name }}"
-        device: "{{ device }}"
-  when: create_new_volume == True
+        - name: "Attach Volume: {{ volume_name }} to Server: {{ server_name }} on {{ device }}"
+          openstack.cloud.server_volume:
+            cloud: "{{ cloud }}"
+            state: present
+            server: "{{ server_name }}"
+            volume: "{{ volume_name }}"
+            device: "{{ device }}"
+      when: create_second_volume == True

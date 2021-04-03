@@ -1,0 +1,23 @@
+[all:vars]
+#ansible_user=ubuntu
+# ssh key
+#ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPrivateKeyCCOMERO.priv.pem
+
+
+[omero]
+206.12.92.91
+[omero:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPrivateKeyCCOMERO.priv.pem
+
+[omero_dev]
+206.12.95.221
+[omero_dev:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPrivateKeyCCOMERO.priv.pem
+
+[national_omero]
+206.12.94.73 
+[national_omero:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPrivateKeyCCOMERO.priv.pem
