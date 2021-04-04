@@ -72,21 +72,16 @@
         #description: "{{ server_description }}"
         image: "{{ image }}"
         boot_from_volume: true
-        volume_size: 100
+        volume_size: "{{ boot_volume_size }}"
         reuse_ips: false
         key_name: "{{ keypair }}"
         timeout: 200
         flavor: "{{ flavour }}"
         network: "{{ network }}" 
-        security_groups: "{{ item }}"      
+        security_groups: "{{ security_group_list }}"      
         floating_ips:
           - "{{ floating_ip }}"
-      with_items:
-        - default
-        - web
-        - omero
-        - ping
-        - ssh
+
     
 
         
@@ -141,7 +136,7 @@
           openstack.cloud.volume:
             cloud: "{{ cloud }}"
             state: present
-            size:  "{{ volume_size_gb }}"   #(in Gb)
+            size:  "{{ second_volume_size_gb }}"   #(in Gb)
             display_name: "{{ volume_name }}"
             display_description: "{{ volume_description }}"
         
