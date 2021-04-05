@@ -4,7 +4,7 @@
 # handles the letsencrypt certificate setup
 
   vars:
-    https_certificate_domain: "omerocloud.med.ualberta.ca"
+    https_certificate_domain: "{{ fqdn | default('localhost') }}"
     postgresql_version: "12"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
     omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.5.0') }}"
@@ -118,7 +118,7 @@
       ansible.posix.synchronize:
         mode: pull
         src: /etc/letsencrypt/
-        dest: "/Volumes/GoogleDrive/My Drive/P/OMEROCC/ToUbuntu20/certs/{{ https_certificate_domain }}/"
+        dest: "./certs/{{ https_certificate_domain }}/"
       when:
         - (remote_p.stat.isdir is defined and remote_p.stat.isdir)
         - (not (local_p.stat.isdir is defined and local_p.stat.isdir))               
@@ -224,11 +224,12 @@
     - role: ome.omero_web
     
     - role: sco.letsencrypt
-      https_letsencrypt_enabled: true
-#     https_certificate_domain: no need to define here, it's defined at playbook level
-      https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain }}"
-      letsencrypt_email: "sogg@ualberta.ca"
-#     omero_server_config_set:     Also defined at playbook level
+      vars:
+        https_letsencrypt_enabled: true
+        https_certificate_domain: "{{ fqdn }}"
+        https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain }}"
+        letsencrypt_email: "sogg@ualberta.ca"
+#       omero_server_config_set:     Also defined at playbook level
 #       omero.glacier2.IceSSL.Password: "secret"
     
   tasks:

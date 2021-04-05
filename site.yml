@@ -42,28 +42,28 @@
 # # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
 #Create National Production Server
- - import_playbook: createInstance.yml
-   vars:
-     cloud: cc_arbutus_rpp
-     create_second_volume: True     
-     floating_ip: 206.12.94.73
-     flavour: "p8-12gb"
-     image: Ubuntu-20.04-Focal-x64-2020-12
-     server_name: "National OMERO"
-     boot_volume_size: 100
-     #server_description: "Canadian National production OMERO server"
-     keypair: "SteveOKeyPairCCOMERO"
-     network: "rpp-steveogg-network"
-     volume_name: "binary_repository"     
-     second_volume_size_gb: 100
-     volume_description: "Volume to use as the OMERO binary repository"
-     device: "/dev/vdb"
-     security_group_list:
-       - default
-       - web
-       - ping
-       - omero
-       - ssh
+# - import_playbook: createInstance.yml
+#   vars:
+#     cloud: cc_arbutus_rpp
+#     create_second_volume: True     
+#     floating_ip: 206.12.94.73
+#     flavour: "p8-12gb"
+#     image: Ubuntu-20.04-Focal-x64-2020-12
+#     server_name: "National OMERO"
+#     boot_volume_size: 100
+#     #server_description: "Canadian National production OMERO server"
+#     keypair: "SteveOKeyPairCCOMERO"
+#     network: "rpp-steveogg-network"
+#     volume_name: "binary_repository"     
+#     second_volume_size_gb: 100
+#     volume_description: "Volume to use as the OMERO binary repository"
+#     device: "/dev/vdb"
+#     security_group_list:
+#       - default
+#       - web
+#       - ping
+#       - omero
+#       - ssh
        
 # # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
@@ -84,13 +84,18 @@
 #    device: "/dev/vdb"
 # # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
-# Configure of omero.med.ualberta.ca production OMERO.server. This is currently
+# Configure National OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
 # a single instance
+- hosts: national_omero
+  import_playbook: productionServer.yml
+  vars:
+    fqdn: "206-12-94-73.cloud.computecanada.ca"
+ 
 #- hosts: omero
 #  import_playbook: productionServer.yml
 #  vars:
-   
+#    fqdn: "omerocloud.med.ualberta.ca"   
 
 
 # deployment of a training server. Single node
