@@ -128,7 +128,7 @@
       become: true
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
 
-    - name: Install Prerequisites | unzip wget bc cron python3 python3-venv, etc. 
+    - name: Install Prerequisites | unzip wget bc cron etc. 
       become: true
       apt:
         name:
@@ -183,14 +183,14 @@
       
                     
   roles:
-    - role: ome.lvm_partition
+    - role: sco.lvm_partition
       lvm_lvname: omero
       lvm_lvmount: /OMERO
       lvm_lvsize: 100g
       lvm_lvfilesystem: xfs
       lvm_vgname: VolGroup00
       lvm_vgdevice: "/dev/vdb"
-      lvm_vgcreate: True
+
             
     - role: ome.postgresql
       postgresql_databases:
@@ -228,7 +228,7 @@
         https_letsencrypt_enabled: true
         https_certificate_domain: "{{ fqdn }}"
         letsencrypt_email: "sogg@ualberta.ca"
-
+        https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ fqdn | default('localhost') }}"
     
   tasks:
   

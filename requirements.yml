@@ -22,8 +22,9 @@ roles:
 #  - name: ome.iptables_raw
 #    version: 0.3.1
 
-  - src: ome.lvm_partition
-    version: 1.1.1
+  - name: sco.lvm_partition
+    src: https://github.com/stephenogg/ansible-role-lvm_partition
+    version: 0.0.1
 
 #  - name: ome.network
 #    version: 1.1.4
