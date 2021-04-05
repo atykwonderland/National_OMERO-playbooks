@@ -86,8 +86,9 @@
 
 # Configure National OMERO.server. This is currently
 # a one-node server hosting the db_server, omero_server and web_server from 
-# a single instance
-- hosts: national_omero
+# a single instance.
+
+- name: Install OMERO and configure
   import_playbook: productionServer.yml
   vars:
     fqdn: "206-12-94-73.cloud.computecanada.ca"
