@@ -227,10 +227,8 @@
       vars:
         https_letsencrypt_enabled: true
         https_certificate_domain: "{{ fqdn }}"
-        https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain }}"
         letsencrypt_email: "sogg@ualberta.ca"
-#       omero_server_config_set:     Also defined at playbook level
-#       omero.glacier2.IceSSL.Password: "secret"
+
     
   tasks:
   
@@ -294,24 +292,24 @@
         group: "omero-server"
         force: yes
 
-    - name: Outreach only config for OMERO.web plugins
-      become: yes
-      template:
-        src: files/omero-web-outreach-webapps.omero
-        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
-
-    - name: Add operating system user "importer1"
-      become: true
-      user:
-       name: "importer1"
-       state: present
-       groups: "{{ omero_server_system_managedrepo_group }}"
-       password: "{{ os_system_users_password }}"
+#    - name: Outreach only config for OMERO.web plugins
+#      become: yes
+#      template:
+#        src: files/omero-web-outreach-webapps.omero
+#        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
+#        owner: "root"
+#        group: "root"
+#        mode: "u=rw,go=r"
+#      notify:
+#      - restart omero-web
+#
+#    - name: Add operating system user "importer1"
+#      become: true
+#      user:
+#       name: "importer1"
+#       state: present
+#       groups: "{{ omero_server_system_managedrepo_group }}"
+#       password: "{{ os_system_users_password }}"
 
     - name: Allow managed repo group to login
       become: yes
