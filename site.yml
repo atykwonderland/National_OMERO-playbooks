@@ -55,7 +55,7 @@
     keypair: "SteveOKeyPairCCOMERO"
     network: "rpp-steveogg-network"
     volume_name: "binary_repository"     
-    second_volume_size_gb: 100
+    second_volume_size_gb: 15000
     volume_description: "Volume to use as the OMERO binary repository"
     device: "/dev/vdb"
     security_group_list:
