@@ -94,6 +94,7 @@
       when: not (local_p.stat.isdir is defined and local_p.stat.isdir)  
       
     - name: Double check for certs on the server
+      become: true
       stat:
         path: "/etc/letsencrypt/live"
       register: remote_p
@@ -150,10 +151,12 @@
       apt:
         name: "*"
         state: latest
+      register: packages_updated
         
     - name: Reboot the machine
       become: true
-      reboot:        
+      reboot:
+      when: packages_updated.changed        
 
 
     # Since Nginx isn't installed until later the directories are created in advance
@@ -222,6 +225,8 @@
         
 #Install the OMERO.web into /opt/omero/web  
     - role: ome.omero_web
+      vars:
+        omero_web_systemd_limit_nofile: 16384
     
     - role: sco.letsencrypt
       vars:
@@ -318,6 +323,21 @@
         regexp: "{{ omero_server_system_managedrepo_group }}"
         insertbefore: BOF
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
+
+    - name: NGINX - Performance tuning - worker processes
+      become: yes
+      replace:
+        dest: "/etc/nginx/nginx.conf"
+        regexp: '^worker_processes\s+\d+;'
+        replace: "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }};"
+
+    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    - name: NGINX - Performance tuning - worker connections
+      become: yes
+      replace:
+        path: "/etc/nginx/nginx.conf"
+        regexp: 'worker_connections\s+\d+;'
+        replace: "worker_connections 1024;"        
 
 
 
