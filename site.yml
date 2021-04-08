@@ -43,29 +43,29 @@
 
 #Create National Production Server
 - import_playbook: createInstance.yml
- vars:
-   cloud: cc_arbutus_rpp
-   create_second_volume: True     
-   floating_ip: 206.12.94.73
-   flavour: "p16-24gb"
-   image: Ubuntu-20.04-Focal-x64-2020-12
-   server_name: "National_OMERO"
-   boot_volume_size: 200
-   server_description: "Canadian National OMERO production server"
-   keypair: "SteveOKeyPairCCOMERO"
-   network: "rpp-steveogg-network"
-   volume_name: "binary_repository"     
-   second_volume_size_gb: 20000
-   volume_description: "Volume to use as the OMERO binary repository"
-   device: "/dev/vdb"
-   security_group_list:
-     - default
-     - web
-     - ping
-     - omero
-     - ssh
+  vars:
+    cloud: cc_arbutus_rpp
+    create_second_volume: True     
+    floating_ip: 206.12.94.73
+    flavour: "p16-24gb"
+    image: Ubuntu-20.04-Focal-x64-2020-12
+    server_name: "National_OMERO"
+    boot_volume_size: 200
+#   server_description: "Canadian National OMERO production server"
+    keypair: "SteveOKeyPairCCOMERO"
+    network: "rpp-steveogg-network"
+    volume_name: "binary_repository"     
+    second_volume_size_gb: 20000
+    volume_description: "Volume to use as the OMERO binary repository"
+    device: "/dev/vdb"
+    security_group_list:
+      - default
+      - web
+      - ping
+      - omero
+      - ssh
        
-# # instance defined to boot from a 100Gb disk mounted on /dev/vda
+# # instance defined to boot from a 200Gb disk mounted on /dev/vda
 
 #Create Development Server
 #- import_playbook: createInstance.yml

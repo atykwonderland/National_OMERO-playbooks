@@ -62,7 +62,7 @@
       - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
  
-     omero_web_apps_top_links:
+    omero_web_apps_top_links:
       - label: Figure
         link: figure_index
         attrs:
@@ -240,7 +240,7 @@
     - role: sco.lvm_partition
       lvm_lvname: omero
       lvm_lvmount: /OMERO
-      lvm_lvsize: "{{ boot_volume)_size }}"
+      lvm_lvsize: "{{ second_volume_size_gb }}"
       lvm_lvfilesystem: xfs
       lvm_vgname: VolGroup00
       lvm_vgdevice: "/dev/vdb"
@@ -273,7 +273,7 @@
         - matplotlib
         
         
-     - role: ome.postgresql_backup
+    - role: ome.postgresql_backup
       postgresql_backup_compress: true
       postgresql_backup_dir: "/OMERO/backups/database"
       postgresql_backup_filename_format: "nightly-omero-%Y%m%d-%H%M%S.pgdump.gz"
@@ -283,7 +283,7 @@
 #Install the OMERO.web into /opt/omero/web  
     - role: ome.omero_web
       vars:
-        omero_web_systemd_limit_nofile: 16384
+      omero_web_systemd_limit_nofile: 16384
     
     - role: sco.letsencrypt
       vars:
