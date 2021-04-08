@@ -14,7 +14,7 @@
     omero_server_datadir_chown: False
     omero_server_release: "{{ omero_server_release_override | default('5.6.3') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.9.1') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.3.2') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.4.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.10.2') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.4.1') }}"
@@ -41,7 +41,15 @@
       omero.glacier2.IceSSL.ProtocolVersionMin: "TLS1_2"
       omero.glacier2.IceSSL.Protocols: "TLS1_2"
 
-      
+ 
+    omero_web_apps_names:
+      - omero_figure
+      - omero_fpbioimage
+      - omero_iviewer
+      - omero_parade
+      - omero_webtagging_autotag
+      - omero_webtagging_tagsearch
+     
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
     # Python 3 otherwise ignored
@@ -53,6 +61,49 @@
       - "omero-parade=={{ omero_parade_release }}"
       - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+ 
+     omero_web_apps_top_links:
+      - label: Figure
+        link: figure_index
+        attrs:
+          title: Open Figure in new tab
+          target: _blank
+      - label: Tag Search
+        link: tagsearch
+
+    omero_web_apps_config_append:
+      omero.web.open_with:
+        - - omero_figure
+          - new_figure
+          - supported_objects:
+              - images
+            target: _blank
+            label: OMERO.figure
+        - - omero_fpbioimage
+          - fpbioimage_index
+          - supported_objects:
+              - image
+            script_url: fpbioimage/openwith.js
+            label: FPBioimage
+        - - omero_iviewer
+          - omero_iviewer_index
+          - supported_objects:
+              - images
+              - dataset
+              - well
+            script_url: omero_iviewer/openwith.js
+            label: OMERO.iviewer
+      omero.web.ui.center_plugins:
+        - - Auto Tag
+          - omero_webtagging_autotag/auto_tag_init.js.html
+          - auto_tag_panel
+        - - Parade
+          - omero_parade/init.js.html
+          - omero_parade
+
+    omero_web_apps_config_set:
+      omero.web.viewer.view: omero_iviewer.views.index
+     
 
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.7.3') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
@@ -189,7 +240,7 @@
     - role: sco.lvm_partition
       lvm_lvname: omero
       lvm_lvmount: /OMERO
-      lvm_lvsize: 100g
+      lvm_lvsize: "{{ boot_volume)_size }}"
       lvm_lvfilesystem: xfs
       lvm_vgname: VolGroup00
       lvm_vgdevice: "/dev/vdb"
@@ -221,6 +272,12 @@
         # For "simple frap with figure" script
         - matplotlib
         
+        
+     - role: ome.postgresql_backup
+      postgresql_backup_compress: true
+      postgresql_backup_dir: "/OMERO/backups/database"
+      postgresql_backup_filename_format: "nightly-omero-%Y%m%d-%H%M%S.pgdump.gz"
+      postgresql_backup_minimum_expected_size: 100000      
         
         
 #Install the OMERO.web into /opt/omero/web  
@@ -324,6 +381,7 @@
         insertbefore: BOF
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
 
+    # (Total cores / 2), leaving some for WSGI
     - name: NGINX - Performance tuning - worker processes
       become: yes
       replace:

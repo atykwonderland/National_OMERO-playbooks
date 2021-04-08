@@ -69,7 +69,7 @@
         state: present
         cloud: "{{ cloud }}"
         name: "{{ server_name }}"
-        #description: "{{ server_description }}"
+        description: "{{ server_description }}"
         image: "{{ image }}"
         boot_from_volume: true
         volume_size: "{{ boot_volume_size }}"
