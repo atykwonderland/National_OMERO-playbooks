@@ -41,6 +41,12 @@
       omero.glacier2.IceSSL.ProtocolVersionMin: "TLS1_2"
       omero.glacier2.IceSSL.Protocols: "TLS1_2"
 
+    # Workaround lack of restriction on temp file sizes
+    # https://github.com/ome/omero-web/issues/118
+    # The downside is that it won't be automatically cleared out
+    omero_server_systemd_environment:
+      OMERO_TMPDIR: /opt/omero/server/tmp
+
  
     omero_web_apps_names:
       - omero_figure
@@ -354,24 +360,6 @@
         group: "omero-server"
         force: yes
 
-#    - name: Outreach only config for OMERO.web plugins
-#      become: yes
-#      template:
-#        src: files/omero-web-outreach-webapps.omero
-#        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
-#        owner: "root"
-#        group: "root"
-#        mode: "u=rw,go=r"
-#      notify:
-#      - restart omero-web
-#
-#    - name: Add operating system user "importer1"
-#      become: true
-#      user:
-#       name: "importer1"
-#       state: present
-#       groups: "{{ omero_server_system_managedrepo_group }}"
-#       password: "{{ os_system_users_password }}"
 
     - name: Allow managed repo group to login
       become: yes
@@ -395,7 +383,19 @@
       replace:
         path: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
-        replace: "worker_connections 1024;"        
+        replace: "worker_connections 1024;"
+        
+    # Workaround lack of restriction on temp file sizes
+    # https://github.com/ome/omero-web/issues/118
+    # The downside is that it won't be automatically cleared out 
+    - name: Create another temporary directory since OMERO doesn't limit sizes and fills up /tmp
+      become: yes
+      file:
+        path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
+        state: directory
+        mode: 0700
+        owner: "{{ omero_server_system_user }}"
+     
 
 
 
