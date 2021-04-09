@@ -1,0 +1,27 @@
+---
+- hosts: omero_dev
+
+  roles:
+
+  - role: ome.prometheus_jmx
+
+  - role: ome.prometheus_postgres
+    prometheus_postgres_dbname: omero
+
+  # For restart handlers
+  - role: ome.omero_common
+
+  - role: ome.omero_prometheus_exporter
+    omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
+    omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
+
+  tasks:
+
+  - name: omero-server prometheus jmx agents
+    become: yes
+    copy:
+      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+      src: omero-server-config-prometheus.omero
+      mode: 0644
+    notify:
+    - restart omero-server
