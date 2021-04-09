@@ -64,35 +64,39 @@
       - ping
       - omero
       - ssh
-       
-# # instance defined to boot from a 200Gb disk mounted on /dev/vda
-
-#Create Development Server
-#- import_playbook: createInstance.yml
-#  vars:
-#    cloud: cc_arbutus_rpp
-#    create_second_volume: True     
-#    floating_ip:
-#    flavour: "p4-6gb"
-#    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "OMERO Development"
-#    description: "OMERO server used to test new functionality"
-#    keypair: "SteveOKeyPairCCOMERO"
-#    network: "rpp-steveogg-network"
-#    volume_name: "binary_repository"     
-#    volume_size_gb: 100
-#    device: "/dev/vdb"
-# # instance defined to boot from a 100Gb disk mounted on /dev/vda
-
-# Configure National OMERO.server. This is currently
-# a one-node server hosting the db_server, omero_server and web_server from 
-# a single instance.
+# instance defined to boot from a 200Gb disk mounted on /dev/vda
 
 - name: Install OMERO and configure
   import_playbook: productionServer.yml
   vars:
     fqdn: "206-12-94-73.cloud.computecanada.ca"
     boot_volume_size: 200
+       
+
+
+#Create Backup Server
+- import_playbook: createInstance.yml
+  vars:
+   cloud: cc_arbutus_rpp
+   create_second_volume: True     
+   floating_ip:
+   flavour: "p4-6gb"
+   image: Ubuntu-20.04-Focal-x64-2020-12
+   server_name: "OMERO Backup"
+   boot_volume_size: 200
+#   description: "server to act as backup for 206.12.94.73"
+   keypair: "SteveOKeyPairCCOMERO"
+   network: "rpp-steveogg-network"
+   volume_name: "binary_repository"     
+   second_volume_size_gb: 20000
+   volume_description: "Volume to use as the OMERO binary repository"
+   device: "/dev/vdb"
+# instance defined to boot from a 200Gb disk mounted on /dev/vda
+
+# Configure National OMERO.server. This is currently
+# a one-node server hosting the db_server, omero_server and web_server from 
+# a single instance.
+
  
 #- hosts: omero
 #  import_playbook: productionServer.yml
