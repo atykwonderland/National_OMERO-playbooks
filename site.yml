@@ -66,6 +66,9 @@
       - ssh
 # instance defined to boot from a 200Gb disk mounted on /dev/vda
 
+# Configure National OMERO.server. This is currently
+# a one-node server hosting the db_server, omero_server and web_server from 
+# a single instance.
 - name: Install OMERO and configure
   import_playbook: productionServer.yml
   vars:
@@ -79,7 +82,7 @@
   vars:
    cloud: cc_arbutus_rpp
    create_second_volume: True     
-   floating_ip:
+   floating_ip: 206.12.94.6
    flavour: "p4-6gb"
    image: Ubuntu-20.04-Focal-x64-2020-12
    server_name: "OMERO Backup"
@@ -87,21 +90,19 @@
 #   description: "server to act as backup for 206.12.94.73"
    keypair: "SteveOKeyPairCCOMERO"
    network: "rpp-steveogg-network"
-   volume_name: "binary_repository"     
+   volume_name: "backup"     
    second_volume_size_gb: 20000
-   volume_description: "Volume to use as the OMERO binary repository"
+   volume_description: "Volume backup omero binary repository on 206.12.94.73"
    device: "/dev/vdb"
 # instance defined to boot from a 200Gb disk mounted on /dev/vda
 
-# Configure National OMERO.server. This is currently
-# a one-node server hosting the db_server, omero_server and web_server from 
-# a single instance.
+
 
  
-#- hosts: omero
-#  import_playbook: productionServer.yml
+#- hosts: backup
+#  include: rdiffBackup.yml
 #  vars:
-#    fqdn: "omerocloud.med.ualberta.ca"   
+#    rdiff_backup_frequency: daily # or weekly or monthly   
 
 
 # deployment of a training server. Single node
