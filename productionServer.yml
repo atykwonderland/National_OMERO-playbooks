@@ -199,7 +199,7 @@
           - wget
           - bc
           - cron
-         #- software-properties-common
+          - rdiff-backup # used to backup the /OMERO binary repository
           - openssl
         state: present
         

@@ -42,68 +42,64 @@
 # # instance defined to boot from a 100Gb disk mounted on /dev/vda
 
 #Create National Production Server
-- import_playbook: createInstance.yml
-  vars:
-    cloud: cc_arbutus_rpp
-    create_second_volume: True     
-    floating_ip: 206.12.94.73
-    flavour: "p16-24gb"
-    image: Ubuntu-20.04-Focal-x64-2020-12
-    server_name: "National_OMERO"
-    boot_volume_size: 200
-#   server_description: "Canadian National OMERO production server"
-    keypair: "SteveOKeyPairCCOMERO"
-    network: "rpp-steveogg-network"
-    volume_name: "binary_repository"     
-    second_volume_size_gb: 20000
-    volume_description: "Volume to use as the OMERO binary repository"
-    device: "/dev/vdb"
-    security_group_list:
-      - default
-      - web
-      - ping
-      - omero
-      - ssh
-# instance defined to boot from a 200Gb disk mounted on /dev/vda
-
-# Configure National OMERO.server. This is currently
-# a one-node server hosting the db_server, omero_server and web_server from 
-# a single instance.
-- name: Install OMERO and configure
-  import_playbook: productionServer.yml
-  vars:
-    fqdn: "206-12-94-73.cloud.computecanada.ca"
-    boot_volume_size: 200
-       
-
-
-#Create Backup Server
-- import_playbook: createInstance.yml
-  vars:
-   cloud: cc_arbutus_rpp
-   create_second_volume: True     
-   floating_ip: 206.12.94.6
-   flavour: "p4-6gb"
-   image: Ubuntu-20.04-Focal-x64-2020-12
-   server_name: "OMERO Backup"
-   boot_volume_size: 200
-#   description: "server to act as backup for 206.12.94.73"
-   keypair: "SteveOKeyPairCCOMERO"
-   network: "rpp-steveogg-network"
-   volume_name: "backup"     
-   second_volume_size_gb: 20000
-   volume_description: "Volume backup omero binary repository on 206.12.94.73"
-   device: "/dev/vdb"
-# instance defined to boot from a 200Gb disk mounted on /dev/vda
-
-
-
- 
-#- hosts: backup
-#  include: rdiffBackup.yml
+#- import_playbook: createInstance.yml
 #  vars:
-#    rdiff_backup_frequency: daily # or weekly or monthly   
+#    cloud: cc_arbutus_rpp
+#    create_second_volume: True     
+#    floating_ip: 206.12.94.73
+#    flavour: "p16-24gb"
+#    image: Ubuntu-20.04-Focal-x64-2020-12
+#    server_name: "National_OMERO"
+#    boot_volume_size: 200
+##   server_description: "Canadian National OMERO production server"
+#    keypair: "SteveOKeyPairCCOMERO"
+#    network: "rpp-steveogg-network"
+#    volume_name: "binary_repository"     
+#    second_volume_size_gb: 20000
+#    volume_description: "Volume to use as the OMERO binary repository"
+#    device: "/dev/vdb"
+#    security_group_list:
+#      - default
+#      - web
+#      - ping
+#      - omero
+#      - ssh
+## instance defined to boot from a 200Gb disk mounted on /dev/vda
+#
+## Configure National OMERO.server. This is currently
+## a one-node server hosting the db_server, omero_server and web_server from 
+## a single instance.
+#- name: Install OMERO and configure
+#  import_playbook: productionServer.yml
+#  vars:
+#    fqdn: "206-12-94-73.cloud.computecanada.ca"
+#    boot_volume_size: 200
+#       
+#
+#
+##Create Backup Server
+#- import_playbook: createInstance.yml
+#  vars:
+#   cloud: cc_arbutus_rpp
+#   create_second_volume: True     
+#   floating_ip: 206.12.94.9
+#   flavour: "p4-6gb"
+#   image: Ubuntu-20.04-Focal-x64-2020-12
+#   server_name: "OMERO Backup"
+#   boot_volume_size: 200
+##   description: "server to act as backup for 206.12.94.73"
+#   keypair: "SteveOKeyPairCCOMERO"
+#   network: "rpp-steveogg-network"
+#   volume_name: "backup"     
+#   second_volume_size_gb: 20000
+#   volume_description: "Volume backup omero binary repository on 206.12.94.73"
+#   device: "/dev/vdb"
+# instance defined to boot from a 200Gb disk mounted on /dev/vda
 
+- import_playbook: rdiffBackup.yml
+  vars:
+    rdiff_backup_frequency: daily # or weekly or monthly   
+    second_volume_size_gb: 20000
 
 # deployment of a training server. Single node
 #- import_playbook: trainingServer.yml
