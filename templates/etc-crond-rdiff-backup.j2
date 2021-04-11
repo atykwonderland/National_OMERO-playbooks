@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Backup the /OMERO binary repository
 
-FROM=192.168.74.242::/OMERO
+FROM=ubuntu@192.168.74.242::/OMERO
 TO=/backup
 
-rdiff-backup $FROM $TO
+rdiff-backup --remote-schema 'ssh -i /home/ubuntu/.ssh/id_rsa %s rdiff-backup --server' $FROM $TO
