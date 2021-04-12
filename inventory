@@ -17,3 +17,9 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 
 [backup_server]
 206.12.94.9
+
+[grafana]
+206.12.92.96
+
+[prometheus]
+206.12.94.110
