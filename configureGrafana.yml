@@ -2,3 +2,4 @@
 - hosts: grafana
   roles:
     - role: sco.grafana
+      become: true
