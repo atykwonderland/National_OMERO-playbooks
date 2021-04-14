@@ -122,7 +122,7 @@ roles:
 #    src: https://github.com/stephenogg/ansible-role-grafana
     
   - name: sco.prometheus
-    src: https://github.com/stephenogg/ansible-role-prometheus
+    src: https://github.com/stephenogg/ansible-prometheus
 
 #collections:
 #  - name: openstack.cloud
