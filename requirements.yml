@@ -123,6 +123,10 @@ roles:
     
   - name: sco.prometheus
     src: https://github.com/stephenogg/ansible-prometheus
+    
+  - name: sco.node-exporter
+    src: https://github.com/stephenogg/ansible-node-exporter
+    
 
 #collections:
 #  - name: openstack.cloud
