@@ -118,9 +118,11 @@ roles:
 #    src: https://github.com/stephenogg/ansible-role-letsencrypt
 #    version: 0.1.2
     
-  - name: sco.grafana
-    src: https://github.com/stephenogg/ansible-role-grafana
+#  - name: sco.grafana
+#    src: https://github.com/stephenogg/ansible-role-grafana
     
+  - name: sco.prometheus
+    src: https://github.com/stephenogg/ansible-role-prometheus
 
 #collections:
 #  - name: openstack.cloud
