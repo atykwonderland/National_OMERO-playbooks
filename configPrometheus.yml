@@ -26,9 +26,25 @@
             
             
     - role: cloudalchemy.alertmanager
-        alertmanager_slack_api_url: 'https://hooks.slack.com/services/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'
+        vars:
+          alertmanager_slack_api_url: 'https://hooks.slack.com/services/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'
+          alertmanager_receivers:
+            - name: slack
+              slack_configs:
+                - send_resolved: true
+                  channel: '#alerts'
+          alertmanager_route:
+            group_by: ['alertname', 'cluster', 'service']
+            group_wait: 30s
+            group_interval: 5m
+            repeat_interval: 3h
+            receiver: slack
+          
+          alertmanager_db_dir: "/data/alertmanager"
               
-    - role: cloudalchemy.blackbox-exporter       
+    - role: cloudalchemy.blackbox-exporter
+    
+           
     - role: sco.loki
             
 
