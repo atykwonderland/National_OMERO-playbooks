@@ -121,12 +121,17 @@ roles:
   - name: sco.grafana
     src: https://github.com/stephenogg/ansible-role-grafana
     
-  - name: sco.prometheus
-    src: https://github.com/stephenogg/ansible-prometheus
+  - src: cloudalchemy.prometheus
+    version: 2.17.0
+        
+  - src: cloudalchemy.blackbox-exporter  
     
-  - name: sco.node-exporter
-    src: https://github.com/stephenogg/ansible-node-exporter
+  - src: cloudalchemy.node_exporter
+    version: 1.0.0
     
+  - src: cloudalchemy.alertmanager
+    version: 0.19.1
+      
   - name: sco.omero-prometheus-exporter
     src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter
     

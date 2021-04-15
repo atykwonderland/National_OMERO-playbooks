@@ -9,7 +9,7 @@
       lvm_vgname: VolGroup00
       lvm_vgdevice: "/dev/vdb"
       
-    - role: sco.prometheus
+    - role: cloudalchemy.prometheus
       become: true
       vars:
         prometheus_db_dir: "/data/prometheus"
@@ -25,8 +25,10 @@
             
             
             
-    - role: sco.alert_manager        
-    - role: sco.blackbox_exporter       
+    - role: cloudalchemy.alertmanager
+        alertmanager_slack_api_url: 'https://hooks.slack.com/services/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'
+              
+    - role: cloudalchemy.blackbox-exporter       
     - role: sco.loki
             
 

@@ -2,7 +2,7 @@
 
 - hosts: monitored
   roles:
-    - role: sco.node-exporter
+    - role: cloudalchemy.node_exporter
       become: true
   
   tasks:
@@ -47,6 +47,7 @@
     # and {{omero_common_basedir}} (normally /opt/omero)
     - role: ome.omero_common
     
+    #sco.omero_prometheues_exporter works with Ubuntu20
     - role: sco.omero_prometheus_exporter
       vars:
         omero_prometheus_exporter_omero_user: omero-monitoring
