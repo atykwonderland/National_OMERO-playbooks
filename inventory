@@ -7,10 +7,8 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 [omero]
 206.12.92.91
 
-
 [omero_dev]
 206.12.95.221
-
 
 [national_omero]
 206.12.94.73 
@@ -18,5 +16,32 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 [backup_server]
 206.12.94.9
 
-[monitoring]
+<<<<<<< HEAD
+
+=======
+[grafana]
 206.12.92.26
+
+[prometheus]
+206.12.94.110
+
+[monitored]
+206.12.92.91
+206.12.95.221
+206.12.94.73
+206.12.94.9
+206.12.92.26
+206.12.94.110
+
+[web-servers]
+206.12.92.91
+206.12.95.221
+206.12.94.73
+
+[omero-servers]
+206.12.92.91
+206.12.95.221
+206.12.94.73
+
+
+>>>>>>> dedebb6b56bdbc7699880851780f486e1ce3b14c
