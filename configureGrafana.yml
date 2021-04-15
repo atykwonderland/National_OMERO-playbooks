@@ -3,3 +3,7 @@
   roles:
     - role: sco.grafana
       become: true
+      
+    - role: sco.node-exporter
+      become: true
+      

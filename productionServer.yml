@@ -127,6 +127,16 @@
             proxy_read_timeout 86400;
           }
 
+
+    omerodir: /opt/omero/server/OMERO.server
+    venv_server: /opt/omero/server/venv3
+    password: 'omero'
+    omero_user: 'root'
+    host: 'localhost'
+  environment:
+    OMERODIR: "{{ omerodir }}"
+    PATH: "{{ venv_server }}/bin:{{ ansible_env.PATH }}"
+
           
 
   pre_tasks:
@@ -368,6 +378,37 @@
         regexp: "{{ omero_server_system_managedrepo_group }}"
         insertbefore: BOF
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
+
+    - name: Create omero-monitoring, a restricted admin who can export prometheus data
+      shell: "omero user add -a omero-monitoring omero-monitoring omero-monitoring system  -P omero-monitoring --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      
+    - name: Retrieve omero-monitoring's omero userid
+      become: true
+      become_user: postgres
+      community.general.postgresql_query:
+        db: omero
+        query: "select id from experimenter where firstname = 'omero-monitoring'"
+      register: result
+      tags: test
+       
+    - name: Use omero-monitoroing's id to set restrictions to be a read-only light-admin
+      shell: "omero obj map-set Experimenter:{{result.query_result[0].id}} config AdminPrivilege:{{item}} false -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      tags: test
+      with_items:
+        - Sudo
+        - WriteOwned
+        - WriteFile
+        - WriteManagedRepo
+        - DeleteOwned
+        - DeleteFile
+        - DeleteManagedRepo
+        - Chgrp
+        - Chown
+        - ModifyGroup
+        - ModifyUser
+        - ModifyGroupMembership
+        - WriteScriptRepo
+        - DeleteScriptRepo
 
     # (Total cores / 2), leaving some for WSGI
     - name: NGINX - Performance tuning - worker processes

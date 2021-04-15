@@ -1,5 +1,5 @@
 ---
-- hosts: monitoring
+- hosts: prometheus
   roles:
     - role: sco.lvm_partition
       lvm_lvname: TSDB
@@ -17,9 +17,10 @@
           node:
           - targets:
             - localhost:9100
-      
-    - role: sco.node-exporter
-      become: true
-      
-    - role: sco.grafana
-      become: true  
+            - grafana.arbutus:9100
+            - omero.med.ualberta.ca:9100
+            - 206-12-95-221.cloud.computecanada.ca:9100
+            - 206-12-94-73.cloud.computecanada.ca:9100
+            - 206-12-94-9.cloud.computecanada.ca:9100
+            
+
