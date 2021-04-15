@@ -4,7 +4,7 @@
     - role: sco.lvm_partition
       lvm_lvname: TSDB
       lvm_lvmount: /data
-      lvm_lvsize: 8500
+      lvm_lvsize: 9500
       lvm_lvfilesystem: xfs
       lvm_vgname: VolGroup00
       lvm_vgdevice: "/dev/vdb"
@@ -12,7 +12,7 @@
     - role: sco.prometheus
       become: true
       vars:
-        prometheus_db_dir: "/data"
+        prometheus_db_dir: "/data/prometheus"
         prometheus_targets:
           node:
           - targets:
@@ -22,5 +22,11 @@
             - 206-12-95-221.cloud.computecanada.ca:9100
             - 206-12-94-73.cloud.computecanada.ca:9100
             - 206-12-94-9.cloud.computecanada.ca:9100
+            
+            
+            
+    - role: sco.alert_manager        
+    - role: sco.blackbox_exporter       
+    - role: sco.loki
             
 

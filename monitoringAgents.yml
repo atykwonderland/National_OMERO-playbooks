@@ -39,7 +39,7 @@
       
       
 
-- hosts: [omero-server]
+- hosts: [omero_server]
   roles:
     - role: ome.prometheus_jmx
     
@@ -62,7 +62,7 @@
       notify:
       - restart omero-server    
 
-- hosts: [omero-web]
+- hosts: [omero_web]
   roles:
     - role: ome.omero_web_django_prometheus
     
@@ -84,7 +84,7 @@
       state: restarted    
     
 
-- hosts: [omero-db]               
+- hosts: [omero_db]               
   roles:
     - role: ome.prometheus_postgres
       prometheus_postgres_dbname: omero

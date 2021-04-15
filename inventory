@@ -30,17 +30,17 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 206.12.92.26
 206.12.94.110
 
-[omero-web]
+[omero_web]
 206.12.92.91
 206.12.95.221
 206.12.94.73
 
-[omero-server]
+[omero_server]
 206.12.92.91
 206.12.95.221
 206.12.94.73
 
-[omero-db]
+[omero_db]
 206.12.92.91
 206.12.95.221
 206.12.94.73
