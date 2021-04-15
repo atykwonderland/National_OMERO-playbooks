@@ -16,9 +16,6 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 [backup_server]
 206.12.94.9
 
-<<<<<<< HEAD
-
-=======
 [grafana]
 206.12.92.26
 
@@ -43,5 +40,8 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 206.12.95.221
 206.12.94.73
 
+[db-servers]
+206.12.92.91
+206.12.95.221
+206.12.94.73
 
->>>>>>> dedebb6b56bdbc7699880851780f486e1ce3b14c
