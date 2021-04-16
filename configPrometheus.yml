@@ -47,5 +47,5 @@
            
     - role: sco.loki
       vars:
-        lodi_db_dir: "/data/loki"      
+        loki_db_dir: "/data/loki"      
 

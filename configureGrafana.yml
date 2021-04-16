@@ -3,7 +3,4 @@
   roles:
     - role: sco.grafana
       become: true
-
-
-
       
