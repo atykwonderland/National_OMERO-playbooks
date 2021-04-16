@@ -121,7 +121,7 @@ roles:
   - name: sco.grafana
     src: https://github.com/stephenogg/ansible-role-grafana
     
-   - name: sco.loki
+  - name: sco.loki
     src: https://github.com/stephenogg/ansible-role-loki
    
     
