@@ -148,22 +148,26 @@
 - name: Create Prometheus Server
   hosts: prometheus
   tasks:
-  import_role:
-    name: sco.create_instance
-  vars:
-    cloud: cc_arbutus_default
-    create_second_volume: false     
-    floating_ip: 206.12.
-    flavour: "p4-6gb"
-    image: Ubuntu-20.04-Focal-x64-2020-12
-    server_name: "prometheus"
-    boot_volume_size: 9500
-    #description: "" - currently not used
-    keypair: "SteveOKeyPairCCOMERO"
-    network: "def-steveogg-network"
-    security_group_list:
-      - default
-      - ssh
+    - name: Create instance for prometheus and loki
+      import_role:
+        name: sco.create_instance
+      vars:
+        cloud: cc_arbutus_default
+        create_second_volume: false     
+        floating_ip: 206.12.94.110
+        flavour: "p4-6gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        server_name: "prometheus"
+        boot_volume_size: 9500
+        #description: "" - currently not used
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "def-steveogg-network"
+        security_group_list:
+          - default
+          - ssh
+          
+    - name: Install Prometheus and loki
+      import_playbook: configurePrometheus.yml
   
   
     
