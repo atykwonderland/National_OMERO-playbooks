@@ -35,6 +35,7 @@
         seccond_volume_size_gb: 4500
         second_volume_description: "mount this on /OMERO to act as the binary repository"
         device: "/dev/vdb"
+      delegate_to: localhost  
         
     - name: configure the newly created instance
       import_playbook: productionServer.yml
@@ -68,6 +69,7 @@
         second_volume_description: "mount this on /OMERO to act as the binary repository"
         second_volume_size_gb: 50
         device: "/dev/vdb"
+      delegate_to: localhost  
         
     - name: configure the newly created instance as a training server
       import_playbook: trainingServer.yml
@@ -97,11 +99,12 @@
         second_volume_description: "Volume to use as the OMERO binary repository"
         device: "/dev/vdb"
         security_group_list:
-        - default
-        - web
-        - ping
-        - omero
-        - ssh
+          - default
+          - web
+          - ping
+          - omero
+          - ssh
+      delegate_to: localhost  
         
     - name: configure the national production server 
 ## Configure National OMERO.server. This is currently
@@ -138,6 +141,7 @@
           - default
           - ssh
           - ping
+      delegate_to: localhost    
           
     - name: configure newly created backup instance 
       import_playbook: rdiffBackup.yml
@@ -167,6 +171,7 @@
           - default
           - ssh
           - ping
+      delegate_to: localhost    
           
     - name: Install Prometheus, alertmanager, blackbox-exporter and loki
       import_playbook: configurePrometheus.yml
@@ -193,10 +198,11 @@
           - ssh
           - web
           - ping
+      delegate_to: localhost    
           
     - name: install grafana, get certificate to deploy on https:xxxxx:443
       import_playbook: configureGrafana.yml
     
-
+- name
   
     
