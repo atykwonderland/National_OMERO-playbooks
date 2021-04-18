@@ -1,25 +1,25 @@
 ---
 # tasks file for rdiff-backup
 # Installs rdiff-bakcup, librsync2 and dependencies
-- hosts: backup_server
-  tasks:
-    - name: rdiff-backup | install rdiff-backup
-      become: true
-      apt:
-        update_cache: true
-        name: rdiff-backup
-        state: present
+tasks:
+  - name: rdiff-backup | install rdiff-backup
+    become: true
+    apt:
+      update_cache: true
+      name: rdiff-backup
+      state: present
 
-    - name: rdiff-backup | create cron job
-      become: true
-      template:
-        src: etc-crond-rdiff-backup.j2
-        dest: /etc/cron.{{ rdiff_backup_frequency }}/rdiff-backup
-        mode: 0755
+  - name: rdiff-backup | create cron job
+    become: true
+    template:
+      src: etc-crond-rdiff-backup.j2
+      dest: "/etc/cron.{{ rdiff_backup_frequency }}/rdiff-backup"
+      mode: 0755
         
         
-  roles:
-    - role: sco.lvm_partition
+roles:
+  - role: sco.lvm_partition
+    vars:
       lvm_lvname: backup
       lvm_lvmount: /backup
       lvm_lvsize: "{{ second_volume_size_gb }}"
