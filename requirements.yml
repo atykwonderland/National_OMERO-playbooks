@@ -138,7 +138,9 @@ roles:
     
   - src: cloudalchemy.alertmanager
     version: 0.19.1
-      
+ 
+ # My version includes the dict to select the correct ice version depending on the 
+ # OS distribution. CentOS7,8 or Ubuntu18,20     
   - name: sco.omero-prometheus-exporter
     src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter
     
