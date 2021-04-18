@@ -210,5 +210,36 @@
       import_role:
         name: couldalchemy.node_exporter
       become: true
+
+- name: install exporters on omero servers
+  hosts: [omero-server]
+  tasks:
+    - name: install jmx exporter
+      import_role:
+        name: ome.prometheus_jmx
+        
+    - name: role for handlers and {{ omero_common_basedir }}
+      import_role:
+        name: ome.omero_common
+        
+    - name: omero exporter
+      import_role:
+        name: sco.omero_prometheus_exporter
+      vars:
+        omero_prometheus_exporter_omero_user: omero-monitoring
+        omero_prometheus_exporter_omero_password: omero-monitoring
+        
+    - name: omero-server prometheus jmx agents
+      become: yes
+      copy:
+        dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+        src: omero-server-config-prometheus.omero
+        mode: 0644
+      notify:
+      - restart omero-server   
+       
+        
+        
+       
   
     
