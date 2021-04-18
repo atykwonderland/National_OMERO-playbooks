@@ -123,8 +123,10 @@ roles:
     
   - name: sco.loki
     src: https://github.com/stephenogg/ansible-role-loki
-   
-    
+
+  - name: sco.promtail 
+    src: https://github.com/stephenogg/ansible-role-promtail
+
   - src: cloudalchemy.prometheus
     version: 2.17.0
         
