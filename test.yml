@@ -1,7 +1,0 @@
----
-
-- hosts: grafana
-  roles:
-  - role: sco.loki
-    become: true
-    loki_db_dir: /data/loki
