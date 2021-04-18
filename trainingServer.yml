@@ -3,24 +3,6 @@
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-# Frist Create the instance - set "create_compute_instance" to False to avoid creating instance
-- hosts: localhost
-  roles:
-    - role: openstack.create_instance
-      create_compute_instance: false
-      create_new_volume: True     
-      floating_ip: 206.12.95.221
-      image: "Ubuntu-20.04-Focal-x64-2020-12"
-      flavour: "p4-6gb"
-      server_name: "OMERO_dev"
-      keypair: "SteveOKeyPairCCOMERO"
-      volume_name: "training_binary_repository"
-      volume_description: "data repository for omero training server"     
-      volume_size_gb: 100
-      device: "/dev/vdb"
-          
-
-          
 - hosts: omero_dev   # this is defined as 206.12.95.221 in the inventory
   gather_facts: False
   vars:
