@@ -13,7 +13,7 @@
   tasks:
     - name: create the instance in the cloud
       import_role:
-      name: sco.create_instance
+        name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
         create_second_volume: true
@@ -22,7 +22,7 @@
         image: Ubuntu-20.04-Focal-x64-2020-12
         #description: "University of Alberta's production OMERO server" - currently not used.
         boot_volume_size: 200
-        server_name: "OMERO"
+        server_name: "omero"
         keypair: "SteveOKeyPairCCOMERO"
         network: def-steveogg-dev-network
         security_group_list:
@@ -46,7 +46,7 @@
   tasks:
     - name: create training server instance"
       import_role:
-      name: sco.create_instance
+        name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
         create_second_volume: true     
@@ -54,7 +54,7 @@
         flavour: "p4-6gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         boot_volume_size: 20
-        server_name: "OMERO Training"
+        server_name: "omero_training"
         #description: "OMERO server used for training workshops" -currently not used
         keypair: "SteveOKeyPairCCOMERO"
         network: "def-steveogg-dev-network"
@@ -80,14 +80,14 @@
   tasks:
     - name: create the server instance in the cloud
       import_role:
-      name: sco.create_instance
+        name: sco.create_instance
       vars:
         cloud: cc_arbutus_rpp
         create_second_volume: true     
         floating_ip: 206.12.94.73
         flavour: "p16-24gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
-        server_name: "National_OMERO"
+        server_name: "national_omero"
         boot_volume_size: 200
         #server_description: "Canadian National OMERO production server" - currently not used
         keypair: "SteveOKeyPairCCOMERO"
@@ -118,14 +118,14 @@
   tasks:
     - name: Create backup server instance
       import_role:
-      name: sco.create_instance
+        name: sco.create_instance
       vars:
         cloud: cc_arbutus_rpp
         create_second_volume: true     
         floating_ip: 206.12.94.9
         flavour: "p4-6gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
-        server_name: "OMERO Backup"
+        server_name: "omero_backup"
         boot_volume_size: 200
         #description: "server to act as backup for OMERO instance on 206.12.94.73" - currently not used
         keypair: "SteveOKeyPairCCOMERO"
@@ -145,3 +145,25 @@
         second_volume_size_gb: 20000
 
 # Internal monitoring configuration for all OMERO servers
+- name: Create Prometheus Server
+  hosts: prometheus
+  tasks:
+  import_role:
+    name: sco.create_instance
+  vars:
+    cloud: cc_arbutus_default
+    create_second_volume: false     
+    floating_ip: 206.12.
+    flavour: "p4-6gb"
+    image: Ubuntu-20.04-Focal-x64-2020-12
+    server_name: "prometheus"
+    boot_volume_size: 9500
+    #description: "" - currently not used
+    keypair: "SteveOKeyPairCCOMERO"
+    network: "def-steveogg-network"
+    security_group_list:
+      - default
+      - ssh
+  
+  
+    
