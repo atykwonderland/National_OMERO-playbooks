@@ -2,33 +2,43 @@
 # ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
 
 # New hosts are created in Compute Candada's openstack cloud
-# infrastructure. requires a named cloud "cc_arbutus_rep or cc_arbutus_default"
-# that is defined in clouds.yaml file with authentication credentials specific
+# infrastructure. requires a named cloud "cc_arbutus_rep, cc_arbutus_default, or"
+# cc_arbutus_default_dev.
+# Defined in clouds.yaml file with authentication credentials specific
 # for that cloud/project. Create Instance with optional second disk mounted on
 # /dev/vdb to act as the OMERO binary repository.
 
 #UofA production
-#- import_playbook: createInstance.yml
-#  vars:
-#    cloud: cc_arbutus_default
-#    create_second_volume: True     
-#    floating_ip: 206.12.92.91
-#    flavour: "p8-12gb"
-#    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "OMERO"
-#    description: "University of Alberta's production OMERO server"
-#    keypair: "SteveOKeyPairCCOMERO"
-#    network: "def-steveogg-dev-network"
-#    volume_name: "binary_repository"     
-#    volume_size_gb: 100
-#    device: "/dev/vdb"
-# # instance defined to boot from a 100Gb disk mounted on /dev/vda
+- hosts: omero
+  roles:
+    - role: sco.create_instance
+      vars:
+        cloud: cc_arbutus_default_dev
+        create_second_volume: true
+        floating_ip: 206.12.92.91
+        flavour: "p8-12gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        #description: "University of Alberta's production OMERO server" - currently not used.
+        boot_volume_size: 200
+        server_name: "OMERO"
+        keypair: "SteveOKeyPairCCOMERO"
+        network: def-steveogg-dev-network
+        security_group_list:
+          - default
+          - web
+          - ssh
+          - omero
+        second_volume_name: "binary_repository"
+        seccond_volume_size_gb: 4500
+        second_volume_description: " mount this on /OMERO to act as the binary repository"
 
 #Create Training Server
-#- import_playbook: createInstance.yml
-#  vars:
-#    cloud: cc_arbutus_default
-#    create_second_volume: True     
+- hosts: omero_dev
+  roles:
+    - role: sco.create_instance
+      vars:
+        cloud: cc_arbutus_default_dev
+        create_second_volume: True     
 #    floating_ip: 206.12.95.221
 #    flavour: "p4-6gb"
 #    image: Ubuntu-20.04-Focal-x64-2020-12
