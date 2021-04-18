@@ -203,6 +203,12 @@
     - name: install grafana, get certificate to deploy on https:xxxxx:443
       import_playbook: configureGrafana.yml
     
-- name
+- name: Configure instances for monitoring
+  hosts: [monitored]
+  tasks:
+    - name: install node exporter
+      import_role:
+        name: couldalchemy.node_exporter
+      become: true
   
     
