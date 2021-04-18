@@ -8,10 +8,12 @@
 # for that cloud/project. Create Instance with optional second disk mounted on
 # /dev/vdb to act as the OMERO binary repository.
 
-#UofA production
-- hosts: omero
-  roles:
-    - role: sco.create_instance
+- name: Create/Configure UofA production instance
+  hosts: omero
+  tasks:
+    - name: create the instance in the cloud
+      import_role:
+      name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
         create_second_volume: true
@@ -27,68 +29,94 @@
           - default
           - web
           - ssh
+          - ping
           - omero
         second_volume_name: "binary_repository"
         seccond_volume_size_gb: 4500
-        second_volume_description: " mount this on /OMERO to act as the binary repository"
+        second_volume_description: "mount this on /OMERO to act as the binary repository"
+        device: "/dev/vdb"
+        
+    - name: configure the newly created instance
+      import_playbook: productionServer.yml
+        vars:
+          fqdn: "206-12-92-91.cloud.computecanada.ca"
 
-#Create Training Server
-- hosts: omero_dev
-  roles:
-    - role: sco.create_instance
+- name: Create Training Server
+  hosts: omero_dev
+  tasks:
+    - name: create training server instance"
+      import_role:
+      name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
-        create_second_volume: True     
-#    floating_ip: 206.12.95.221
-#    flavour: "p4-6gb"
-#    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "OMERO Training"
-#    description: "OMERO server used for training workshops"
-#    keypair: "SteveOKeyPairCCOMERO"
-#    network: "def-steveogg-dev-network"
-#    volume_name: "binary_repository"     
-#    volume_size_gb: 100
-#    device: "/dev/vdb"
-# # instance defined to boot from a 100Gb disk mounted on /dev/vda
-
+        create_second_volume: true     
+        floating_ip: 206.12.95.221
+        flavour: "p4-6gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        boot_volume_size: 20
+        server_name: "OMERO Training"
+        #description: "OMERO server used for training workshops" -currently not used
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "def-steveogg-dev-network"
+        security_group_list:
+          - default
+          - web
+          - ssh
+          - ping
+          - omero
+        second_volume_name: "binary_repository"
+        second_volume_description: "mount this on /OMERO to act as the binary repository"
+        second_volume_size_gb: 50
+        device: "/dev/vdb"
+        
+    - name: configure the newly created instance as a training server
+      import_playbook: trainingServer.yml
+      vars:
+        fqdn: "206-12-95-221.cloud.computecanada.ca"
+        
 #Create National Production Server
-#- import_playbook: createInstance.yml
-#  vars:
-#    cloud: cc_arbutus_rpp
-#    create_second_volume: True     
-#    floating_ip: 206.12.94.73
-#    flavour: "p16-24gb"
-#    image: Ubuntu-20.04-Focal-x64-2020-12
-#    server_name: "National_OMERO"
-#    boot_volume_size: 200
-##   server_description: "Canadian National OMERO production server"
-#    keypair: "SteveOKeyPairCCOMERO"
-#    network: "rpp-steveogg-network"
-#    volume_name: "binary_repository"     
-#    second_volume_size_gb: 20000
-#    volume_description: "Volume to use as the OMERO binary repository"
-#    device: "/dev/vdb"
-#    security_group_list:
-#      - default
-#      - web
-#      - ping
-#      - omero
-#      - ssh
-## instance defined to boot from a 200Gb disk mounted on /dev/vda
-#
+- name: Create National OMERO Production Server
+  hosts: national_omero
+  tasks:
+    - name: create the server instance in the cloud
+      import_role:
+      name: sco.create_instance
+      vars:
+        cloud: cc_arbutus_rpp
+        create_second_volume: true     
+        floating_ip: 206.12.94.73
+        flavour: "p16-24gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        server_name: "National_OMERO"
+        boot_volume_size: 200
+        #server_description: "Canadian National OMERO production server" - currently not used
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "rpp-steveogg-network"
+        second_volume_name: "binary_repository"     
+        second_volume_size_gb: 20000
+        second_volume_description: "Volume to use as the OMERO binary repository"
+        device: "/dev/vdb"
+        security_group_list:
+        - default
+        - web
+        - ping
+        - omero
+        - ssh
+        
+    - name: configure the national productions server 
 ## Configure National OMERO.server. This is currently
 ## a one-node server hosting the db_server, omero_server and web_server from 
 ## a single instance.
-#- name: Install OMERO and configure
-#  import_playbook: productionServer.yml
-#  vars:
-#    fqdn: "206-12-94-73.cloud.computecanada.ca"
-#    boot_volume_size: 200
-#       
-#
-#
+
+    import_playbook: productionServer.yml
+    vars:
+      fqdn: "206-12-94-73.cloud.computecanada.ca"
+      
+      
 ##Create Backup Server
-#- import_playbook: createInstance.yml
+- name: Create backup server
+  hosts:
+import_playbook: createInstance.yml
 #  vars:
 #   cloud: cc_arbutus_rpp
 #   create_second_volume: True     
