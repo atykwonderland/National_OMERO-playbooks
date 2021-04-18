@@ -103,11 +103,10 @@
         - omero
         - ssh
         
-    - name: configure the national productions server 
+    - name: configure the national production server 
 ## Configure National OMERO.server. This is currently
 ## a one-node server hosting the db_server, omero_server and web_server from 
 ## a single instance.
-
     import_playbook: productionServer.yml
     vars:
       fqdn: "206-12-94-73.cloud.computecanada.ca"
@@ -115,31 +114,33 @@
       
 ##Create Backup Server
 - name: Create backup server
-  hosts:
-import_playbook: createInstance.yml
-#  vars:
-#   cloud: cc_arbutus_rpp
-#   create_second_volume: True     
-#   floating_ip: 206.12.94.9
-#   flavour: "p4-6gb"
-#   image: Ubuntu-20.04-Focal-x64-2020-12
-#   server_name: "OMERO Backup"
-#   boot_volume_size: 200
-##   description: "server to act as backup for 206.12.94.73"
-#   keypair: "SteveOKeyPairCCOMERO"
-#   network: "rpp-steveogg-network"
-#   volume_name: "backup"     
-#   second_volume_size_gb: 20000
-#   volume_description: "Volume backup omero binary repository on 206.12.94.73"
-#   device: "/dev/vdb"
-# instance defined to boot from a 200Gb disk mounted on /dev/vda
-
-- import_playbook: rdiffBackup.yml
-  vars:
-    rdiff_backup_frequency: daily # or weekly or monthly   
-    second_volume_size_gb: 20000
-
-# deployment of a training server. Single node
-#- import_playbook: trainingServer.yml
+  hosts: backup_server
+  tasks:
+    - name: Create backup server instance
+      import_role:
+      name: sco.create_instance
+      vars:
+        cloud: cc_arbutus_rpp
+        create_second_volume: true     
+        floating_ip: 206.12.94.9
+        flavour: "p4-6gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        server_name: "OMERO Backup"
+        boot_volume_size: 200
+        #description: "server to act as backup for OMERO instance on 206.12.94.73" - currently not used
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "rpp-steveogg-network"
+        second_volume_name: "backup"     
+        second_volume_size_gb: 20000
+        second_volume_description: "Volume backup omero binary repository on 206.12.94.73"
+        device: "/dev/vdb"
+        security_group_list:
+          - default
+          - ssh
+          
+    - name: configure newly created backup instance 
+      import_playbook: rdiffBackup.yml
+      vars:
+        rdiff_backup_frequency: daily # or weekly or monthly
 
 # Internal monitoring configuration for all OMERO servers
