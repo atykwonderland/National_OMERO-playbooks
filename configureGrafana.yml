@@ -1,6 +1,6 @@
 ---
-- hosts: grafana
-  roles:
-    - role: sco.grafana
-      become: true
+- name: configure grafana
+  import_role:
+    name: sco.grafana
+  become: true
       
