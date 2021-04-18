@@ -7,7 +7,7 @@
 - hosts: localhost
   roles:
     - role: openstack.create_instance
-      create_compute_instance: True
+      create_compute_instance: false
       create_new_volume: True     
       floating_ip: 206.12.95.221
       image: "Ubuntu-20.04-Focal-x64-2020-12"
