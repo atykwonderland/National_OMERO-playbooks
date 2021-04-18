@@ -1,5 +1,5 @@
 clouds:
-  cc_arbutus_default-dev:
+  cc_arbutus_default_dev:
     auth:
       auth_url: https://arbutus.cloud.computecanada.ca:5000/v3
       project_name: def-steveogg-dev
