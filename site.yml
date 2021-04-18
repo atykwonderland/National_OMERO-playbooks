@@ -137,6 +137,7 @@
         security_group_list:
           - default
           - ssh
+          - ping
           
     - name: configure newly created backup instance 
       import_playbook: rdiffBackup.yml
@@ -165,9 +166,37 @@
         security_group_list:
           - default
           - ssh
+          - ping
           
-    - name: Install Prometheus and loki
+    - name: Install Prometheus, alertmanager, blackbox-exporter and loki
       import_playbook: configurePrometheus.yml
-  
+
+- name: Create Grafana server
+  hosts: grafana
+  tasks:
+    - name: create instance to use as grafana server
+      import_role:
+        name: sco.create_instance
+      vars:
+        cloud: cc_arbutus_default
+        create_second_volume: false     
+        floating_ip: 206.12.92.26
+        flavour: "p4-6gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        server_name: "grafana"
+        boot_volume_size: 500
+        #description: "" - currently not used
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "def-steveogg-network"
+        security_group_list:
+          - default
+          - ssh
+          - web
+          - ping
+          
+    - name: install grafana, get certificate to deploy on https:xxxxx:443
+      import_playbook: configureGrafana.yml
+    
+
   
     
