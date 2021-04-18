@@ -142,5 +142,6 @@
       import_playbook: rdiffBackup.yml
       vars:
         rdiff_backup_frequency: daily # or weekly or monthly
+        second_volume_size_gb: 20000
 
 # Internal monitoring configuration for all OMERO servers
