@@ -118,7 +118,7 @@ roles:
 #    src: https://github.com/stephenogg/ansible-role-letsencrypt
 #    version: 0.1.2
 
-  - name: sco.create_instances
+  - name: sco.create_instance
     src: https://github.com/stephenogg/ansible-role-create-instance
 
   - name: sco.grafana

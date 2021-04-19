@@ -1,0 +1,44 @@
+---
+
+- name: check for local copy of cert
+  stat:
+    path: "./certs/{{ https_certificate_domain }}"
+  delegate_to: 127.0.0.1  
+  register: local_p
+- debug:
+    msg: "Local Certificates Found! Let's see if we need to copy these to the server "
+  when: local_p.stat.isdir is defined and local_p.stat.isdir  
+- debug:
+    msg: "No Local Certificates Found! Let's see if there are any on the server."
+  when: not (local_p.stat.isdir is defined and local_p.stat.isdir)  
+  
+- name: Double check for certs on the server
+  become: true
+  stat:
+    path: "/etc/letsencrypt/live"
+  register: remote_p
+- debug:
+    msg: "Certificate Directory found on server "
+  when: remote_p.stat.isdir is defined and remote_p.stat.isdir  
+- debug:
+    msg: "No Certificate directory found on server "
+  when: not (remote_p.stat.isdir is defined and remote_p.stat.isdir)
+  
+- name: Copy local certificate information to the server if it exists
+  become: true
+  ansible.posix.synchronize:
+    src:  "./certs/{{ https_certificate_domain }}/"
+    dest: /etc/letsencrypt/       
+  when: # Both conditions below must be true for this task to execute
+    - (not (remote_p.stat.isdir is defined and remote_p.stat.isdir))
+    - (local_p.stat.isdir is defined and local_p.stat.isdir)
+    
+- name: Copy remote certificate information from the server to a local location for future reference
+  become: true
+  ansible.posix.synchronize:
+    mode: pull
+    src: /etc/letsencrypt/
+    dest: "./certs/{{ https_certificate_domain }}/"
+  when:
+    - (remote_p.stat.isdir is defined and remote_p.stat.isdir)
+    - (not (local_p.stat.isdir is defined and local_p.stat.isdir))

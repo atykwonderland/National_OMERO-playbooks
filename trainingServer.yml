@@ -130,7 +130,7 @@
       ansible.posix.synchronize:
         mode: pull
         src: /etc/letsencrypt/
-        dest: "/Volumes/GoogleDrive/My Drive/P/OMEROCC/ToUbuntu20/certs/{{ https_certificate_domain }}/"
+        dest: "./certs/{{ https_certificate_domain }}/"
       when:
         - (remote_p.stat.isdir is defined and remote_p.stat.isdir)
         - (not (local_p.stat.isdir is defined and local_p.stat.isdir))               
