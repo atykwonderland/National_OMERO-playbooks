@@ -32,7 +32,7 @@
           - ping
           - omero
         second_volume_name: "binary_repository"
-        seccond_volume_size_gb: 4500
+        second_volume_size_gb: 4000
         second_volume_description: "mount this on /OMERO to act as the binary repository"
         device: "/dev/vdb"
       delegate_to: localhost  
@@ -50,7 +50,7 @@
         name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
-        create_second_volume: true     
+        create_second_volume: false     
         floating_ip: 206.12.95.221
         flavour: "p4-6gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
@@ -65,10 +65,10 @@
           - ssh
           - ping
           - omero
-        second_volume_name: "binary_repository"
-        second_volume_description: "mount this on /OMERO to act as the binary repository"
-        second_volume_size_gb: 50
-        device: "/dev/vdb"
+#        second_volume_name: "binary_repository"
+#        second_volume_description: "mount this on /OMERO to act as the binary repository"
+#        second_volume_size_gb: 50
+#        device: "/dev/vdb"
       delegate_to: localhost  
         
     - name: configure the newly created instance as a training server

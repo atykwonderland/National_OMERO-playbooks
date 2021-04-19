@@ -181,17 +181,32 @@
         path: /srv/www/letsencrypt/.well-known/
         recurse: yes
         state: directory
+        
+    - name: create mounot on /OMERO if create_second_voluem == true
+      import_role:  
+        name: ome.lvm_partition
+      become: true  
+      vars:
+        lvm_lvname: omero
+        lvm_lvmount: /OMERO
+        lvm_lvsize: 100g
+        lvm_lvfilesystem: xfs
+        lvm_vgname: VolGroup00
+        lvm_vgdevice: "/dev/vdb"
+        lvm_vgcreate: True
+      when: create_second_volume 
       
+    - name: create /OMERO directory, if required
+      become: yes
+      file:
+        path: /OMERO
+        recurse: yes
+        state: directory
+      when: not create_second_volume
+          
                     
   roles:
-    - role: ome.lvm_partition
-      lvm_lvname: omero
-      lvm_lvmount: /OMERO
-      lvm_lvsize: 100g
-      lvm_lvfilesystem: xfs
-      lvm_vgname: VolGroup00
-      lvm_vgdevice: "/dev/vdb"
-      lvm_vgcreate: True
+
             
     - role: ome.postgresql
       postgresql_databases:
@@ -316,7 +331,7 @@
 # Uncomment this if you want to create the 4 groups "Lab1, Lab2, Lab3 and Lab4", the two
 # training users that are administrators and 50 regular users numbered user-1 through user-50.
 # each of the users passwords are "ome". 
-- include: create_users.yml
+- include: createUsers.yml
  
         
          

@@ -1,0 +1,130 @@
+---
+- hosts: omero_dev
+  vars:
+    omerodir: /opt/omero/server/OMERO.server
+    venv_server: /opt/omero/server/venv3
+    password: 'omero'
+    omero_user: 'root'
+    host: 'localhost'
+  environment:
+    OMERODIR: "{{ omerodir }}"
+    PATH: "{{ venv_server }}/bin:{{ ansible_env.PATH }}"
+
+  tasks:
+    - name: Create OMERO groups
+      shell: "omero group add {{ item.name }} --perms {{ item.permissions }} --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"     
+      with_items:
+        - { name: Lab1, permissions: "'rwra--'"}
+        - { name: Lab2, permissions: "'rwr---'"}
+        - { name: Lab3, permissions: "'rwrw--'"}
+        - { name: Lab4, permissions: "'rw----'"}  
+
+    - name: Create OMERO admin users
+      shell: "omero user add -a {{ item }} {{ item }} {{ item }} Lab1 Lab2 Lab3 Lab4 -P ome --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}" 
+      with_sequence: start=1 end=2 format=trainer-%d
+    
+    - name: Create Importer-1, a restricted admin who can import others' data
+      shell: "omero user add -a importer-1 importer-1 importer-1 system  -P ome --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      
+    - name: Retrieve importer-1's omero userid
+      become: true
+      become_user: postgres
+      community.general.postgresql_query:
+        db: omero
+        query: "select id from experimenter where firstname = 'importer-1'"
+      register: result
+      tags: test
+       
+    - name: Use importer-1's id to set restrictions to only sudo so they can import data for others
+      shell: "omero obj map-set Experimenter:{{result.query_result[0].id}} config AdminPrivilege:{{item}} false -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      tags: test
+      with_items:
+        - WriteOwned
+        - WriteFile
+        - WriteManagedRepo
+        - DeleteOwned
+        - DeleteFile
+        - DeleteManagedRepo
+        - Chgrp
+        - Chown
+        - ModifyGroup
+        - ModifyUser
+        - ModifyGroupMembership
+        - WriteScriptRepo
+        - DeleteScriptRepo
+
+#    - name: Create Importer2, a user who can import others' data
+#      shell: "omero user add importer2 importer2 importer2 system -P ome --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+#      tags: test2
+#      
+#    - name: Retrieve importer2's omero userid
+#      become: true
+#      become_user: postgres
+#      community.general.postgresql_query:
+#        db: omero
+#        query: "select id from experimenter where firstname = 'importer2'"
+#      register: result
+#      tags: test2
+#       
+#    - name: Use importer2's id to allow importer2 to sudo so they can import data for others
+#      shell: "omero obj map-set Experimenter:{{result.query_result[0].id}} config AdminPrivilege:Sudo true -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+#      tags: test2
+#
+            
+    - name: Create 50 OMERO users
+      vars:    
+        args:
+          - {username: 'user-1', firstname: 'Francis', lastname: 'Crick'}
+          - {username: 'user-2', firstname: 'Linda',lastname: 'Buck'}
+          - {username: 'user-3', firstname: 'Charles', lastname: 'Darwin'}
+          - {username: 'user-4', firstname: 'Marie', lastname: 'Curie'}
+          - {username: 'user-5', firstname: 'Alexander', lastname: 'Fleming'}
+          - {username: 'user-6', firstname: 'Rosalind', lastname: 'Franklin'}
+          - {username: 'user-7', firstname: 'Robert', lastname: 'Hooke'}
+          - {username: 'user-8', firstname: 'Jane', lastname: 'Goodall'}
+          - {username: 'user-9', firstname: 'Gregor', lastname: 'Mendel'}
+          - {username: 'user-10', firstname: 'Barbara', lastname: 'McClintock'}
+          - {username: 'user-11', firstname: 'Louis', lastname: 'Pasteur'}
+          - {username: 'user-12', firstname: 'Ada', lastname: 'Lovelace'}
+          - {username: 'user-13', firstname: 'Linus', lastname: 'Pauling'}
+          - {username: 'user-14', firstname: 'Frances', lastname: 'Kelsey'}
+          - {username: 'user-15', firstname: 'Maurice', lastname: 'Wilkins'}
+          - {username: 'user-16', firstname: 'Florence', lastname: 'Nightingale'}
+          - {username: 'user-17', firstname: 'John', lastname: 'Sulston'}
+          - {username: 'user-18', firstname: 'Elizabeth', lastname: 'Blackwell'}
+          - {username: 'user-19', firstname: 'Richard', lastname: 'Dawkins'}
+          - {username: 'user-20', firstname: 'Caroline', lastname: 'Dean'}
+          - {username: 'user-21', firstname: 'Stephen', lastname: 'Reicher'}
+          - {username: 'user-22', firstname: 'Wendy', lastname: 'Barclay'}
+          - {username: 'user-23', firstname: 'Paul', lastname: 'Nurse'}
+          - {username: 'user-24', firstname: 'Jennifer', lastname: 'Doudna'}                                                            
+          - {username: 'user-25', firstname: 'Adrian', lastname: 'Thomas'}
+          - {username: 'user-26', firstname: 'Ann', lastname: 'Clarke'}
+          - {username: 'user-27', firstname: 'Oswald', lastname: 'Avery'}          
+          - {username: 'user-28', firstname: 'Liz', lastname: 'Sockett'}          
+          - {username: 'user-29', firstname: 'Erwin', lastname: 'Chargaff'}          
+          - {username: 'user-30', firstname: 'Tracey', lastname: 'Rogers'}          
+          - {username: 'user-31', firstname: 'Ronald', lastname: 'Fisher'}          
+          - {username: 'user-32', firstname: 'Rachel', lastname: 'Carson'}          
+          - {username: 'user-33', firstname: 'William', lastname: 'Harvey'}          
+          - {username: 'user-34', firstname: 'Nettie', lastname: 'Stevens'}          
+          - {username: 'user-35', firstname: 'Jeffrey', lastname: 'Hall'}           
+          - {username: 'user-36', firstname: 'Youyou', lastname: 'Tu'} 
+          - {username: 'user-37', firstname: 'Michael', lastname: 'Rosbash'}           
+          - {username: 'user-38', firstname: 'Carol', lastname: 'Greider'}           
+          - {username: 'user-39', firstname: 'Yoshinori', lastname: 'Ohsumi'}           
+          - {username: 'user-40', firstname: 'Rosalyn', lastname: 'Yalow'}           
+          - {username: 'user-41', firstname: 'Amedeo', lastname: 'Avogadro'}           
+          - {username: 'user-42', firstname: 'Virginia', lastname: 'Apgar'}           
+          - {username: 'user-43', firstname: 'Kristian', lastname: 'Birkeland'}           
+          - {username: 'user-44', firstname: 'Mary', lastname: 'Anning'} 
+          - {username: 'user-45', firstname: 'Chen-Ning', lastname: 'Yang'}           
+          - {username: 'user-46', firstname: 'Stephanie', lastname: 'Kwolek'}           
+          - {username: 'user-47', firstname: 'Jagadish', lastname: 'Bose'}           
+          - {username: 'user-48', firstname: 'Rita', lastname: 'Levi-Montalcini'}           
+          - {username: 'user-49', firstname: 'Susumu', lastname: 'Tonegawa'}           
+          - {username: 'user-50', firstname: 'Irene', lastname: 'Joliot-Curie'}
+        
+      shell: "omero user add {{ item.username }} {{ item.firstname }} {{ item.lastname }} Lab1 Lab2 Lab3 Lab4 -P ome --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}" 
+      loop:
+         "{{ args }}"
