@@ -10,8 +10,8 @@
       node:
         - targets:
           - localhost:9100 #206.12.94.110
-          - grafana.arbutus:9100  #206.12.92.26
-          - omerocloud.med.ualberta.ca:9100 #206.12.92.91 UofA production server
+          - 206-12-92-26.cloud.computecanada.ca:9100  #grafana server
+          - omerocloud.med.ualberta.ca:9100           #206.12.92.91 UofA production server
           - 206-12-95-221.cloud.computecanada.ca:9100 # Training server
           - 206-12-94-73.cloud.computecanada.ca:9100  # National omero
           - 206-12-94-9.cloud.computecanada.ca:9100   # national omero backup
@@ -25,15 +25,15 @@
       - name: slack
         slack_configs:
           - send_resolved: true
-        channel: '#alerts'
-     alertmanager_route:
-       group_by: ['alertname', 'cluster', 'service']
-       group_wait: 30s
-       group_interval: 5m
-       repeat_interval: 3h
-       receiver: slack
+            channel: '#alerts'
+    alertmanager_route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: slack
   
-     alertmanager_db_dir: "/data/alertmanager"
+    alertmanager_db_dir: "/data/alertmanager"
               
 - name: install blacbox exporter
   import_role:

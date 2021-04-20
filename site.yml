@@ -87,7 +87,7 @@
         cloud: cc_arbutus_rpp
         create_second_volume: true     
         floating_ip: 206.12.94.73
-        flavour: "p16-24gb"
+        flavour: "p16-32gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "national_omero"
         boot_volume_size: 200
@@ -126,7 +126,7 @@
         cloud: cc_arbutus_rpp
         create_second_volume: true     
         floating_ip: 206.12.94.9
-        flavour: "p4-6gb"
+        flavour: "p8-16gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "omero_backup"
         boot_volume_size: 200
@@ -152,6 +152,7 @@
 # Internal monitoring configuration for all OMERO servers
 - name: Create Prometheus Server
   hosts: prometheus
+  gather_facts: false
   tasks:
     - name: Create instance for prometheus and loki
       import_role:
@@ -178,6 +179,7 @@
 
 - name: Create Grafana server
   hosts: grafana
+  gather_facts: false
   tasks:
     - name: create instance to use as grafana server
       import_role:
