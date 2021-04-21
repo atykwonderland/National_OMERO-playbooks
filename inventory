@@ -19,8 +19,8 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 [grafana]
 206.12.92.26
 
-[prometheus]
-206.12.94.110
+# [prometheus]
+# 206.12.94.110
 
 [monitored]
 206.12.92.91
@@ -28,7 +28,7 @@ ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPriva
 206.12.94.73
 206.12.94.9
 206.12.92.26
-206.12.94.110
+# 206.12.94.110
 
 [omero_web]
 206.12.92.91

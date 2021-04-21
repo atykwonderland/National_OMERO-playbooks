@@ -54,7 +54,7 @@
         floating_ip: 206.12.95.221
         flavour: "p4-6gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
-        boot_volume_size: 20
+        boot_volume_size: 50
         server_name: "omero_training"
         #description: "OMERO server used for training workshops" -currently not used
         keypair: "SteveOKeyPairCCOMERO"
@@ -150,34 +150,37 @@
         second_volume_size_gb: 20000
 
 # Internal monitoring configuration for all OMERO servers
-- name: Create Prometheus Server
-  hosts: prometheus
-  gather_facts: false
-  tasks:
-    - name: Create instance for prometheus and loki
-      import_role:
-        name: sco.create_instance
-      vars:
-        cloud: cc_arbutus_default
-        create_second_volume: false     
-        floating_ip: 206.12.94.110
-        flavour: "p4-6gb"
-        image: Ubuntu-20.04-Focal-x64-2020-12
-        server_name: "prometheus"
-        boot_volume_size: 9500
-        #description: "" - currently not used
-        keypair: "SteveOKeyPairCCOMERO"
-        network: "def-steveogg-network"
-        security_group_list:
-          - default
-          - ssh
-          - ping
-      delegate_to: localhost    
-          
-    - name: Install Prometheus, alertmanager, blackbox-exporter and loki
-      import_playbook: configurePrometheus.yml
+# Currently (20210430) not enough resources to separate the grafana and prometheus servers
+# Therefore create one machine and provision with both apps.
 
-- name: Create Grafana server
+#- name: Create Prometheus Server
+#  hosts: prometheus
+#  gather_facts: false
+#  tasks:
+#    - name: Create instance for prometheus and loki
+#      import_role:
+#        name: sco.create_instance
+#      vars:
+#        cloud: cc_arbutus_default
+#        create_second_volume: false     
+#        floating_ip: 206.12.94.110
+#        flavour: "p4-6gb"
+#        image: Ubuntu-20.04-Focal-x64-2020-12
+#        server_name: "prometheus"
+#        boot_volume_size: 9500
+#        #description: "" - currently not used
+#        keypair: "SteveOKeyPairCCOMERO"
+#        network: "def-steveogg-network"
+#        security_group_list:
+#          - default
+#          - ssh
+#          - ping
+#      delegate_to: localhost    
+#          
+#    - name: Install Prometheus, alertmanager, blackbox-exporter and loki
+#      import_playbook: configurePrometheus.yml
+
+- name: Create Prometheus/Grafana server
   hosts: grafana
   gather_facts: false
   tasks:
@@ -186,15 +189,19 @@
         name: sco.create_instance
       vars:
         cloud: cc_arbutus_default
-        create_second_volume: false     
+        create_second_volume: true     
         floating_ip: 206.12.92.26
-        flavour: "p4-6gb"
+        flavour: "p16-24gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "grafana"
         boot_volume_size: 500
         #description: "" - currently not used
         keypair: "SteveOKeyPairCCOMERO"
         network: "def-steveogg-network"
+        second_volume_name: "data"     
+        second_volume_size_gb: 9800
+        second_volume_description: "mount to provide data directory for prometheus"
+        device: "/dev/vdb"
         security_group_list:
           - default
           - ssh
@@ -202,8 +209,12 @@
           - ping
       delegate_to: localhost    
           
-    - name: install grafana, get certificate to deploy on https:xxxxx:443
+    - name: install grafana, get certificate to deploy on grafana on https.
       import_playbook: configureGrafana.yml
+      
+    - name: install prometheus, alertmanager, blackboxexporter
+      import_playbook: configPrometheus.yml
+        
     
 - name: Configure instances for monitoring
   hosts: [monitored]

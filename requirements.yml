@@ -149,7 +149,7 @@ roles:
     
     
 
-#collections:
-#  - name: openstack.cloud
-#    version: 1.4.0
+collections:
+ - name: openstack.cloud
+   version: 1.4.0
 

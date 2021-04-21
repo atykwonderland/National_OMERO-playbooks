@@ -10,7 +10,7 @@
       node:
         - targets:
           - localhost:9100 #206.12.94.110
-          - 206-12-92-26.cloud.computecanada.ca:9100  #grafana server
+          #- 206-12-92-26.cloud.computecanada.ca:9100  #grafana server
           - omerocloud.med.ualberta.ca:9100           #206.12.92.91 UofA production server
           - 206-12-95-221.cloud.computecanada.ca:9100 # Training server
           - 206-12-94-73.cloud.computecanada.ca:9100  # National omero

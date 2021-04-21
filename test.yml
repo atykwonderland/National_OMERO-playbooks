@@ -1,27 +1,55 @@
-- name: Create Prometheus Server
-  hosts: prometheus
+---
+
+- name: Create Prometheus/Grafana server
+  hosts: grafana
   gather_facts: false
   tasks:
-    - name: Create instance for prometheus and loki
-      import_role:
-        name: sco.create_instance
-      vars:
-        cloud: cc_arbutus_default
-        create_second_volume: false     
-        floating_ip: 206.12.94.110
-        flavour: "p8-16gb"
-        image: Ubuntu-20.04-Focal-x64-2020-12
-        server_name: "prometheus"
-        boot_volume_size: 9500
-        #description: "" - currently not used
-        keypair: "SteveOKeyPairCCOMERO"
-        network: "def-steveogg-network"
-        security_group_list:
-          - default
-          - ssh
-          - ping
-          - promtail
-      delegate_to: localhost    
+#    - name: create instance to use as grafana server
+#      import_role:
+#        name: sco.create_instance
+#      vars:
+#        cloud: cc_arbutus_default
+#        create_second_volume: true     
+#        floating_ip: 206.12.92.26
+#        flavour: "p16-24gb"
+#        image: Ubuntu-20.04-Focal-x64-2020-12
+#        server_name: "grafana"
+#        boot_volume_size: 200
+#        #description: "" - currently not used
+#        keypair: "SteveOKeyPairCCOMERO"
+#        network: "def-steveogg-network"
+#        second_volume_name: "data"     
+#        second_volume_size_gb: 9500
+#        second_volume_description: "disk to provide data directory for prometheus"
+#        device: "/dev/vdb"
+#        security_group_list:
+#          - default
+#          - ssh
+#          - web
+#          - ping
+#          - monitoring
+#      delegate_to: localhost
+#      
+#    - name: gather facts
+#      setup:
+#        gather_subset: all  
+#    
+#    - name: format second disk
+#      import_role:
+#        name: sco.lvm_partition
+#      vars:
+#        lvm_lvname: data
+#        lvm_lvmount: /data
+#        lvm_lvsize: "{{ second_volume_size_gb }}"
+#        lvm_lvfilesystem: xfs
+#        lvm_vgname: VolGroup00
+#        lvm_vgdevice: "/dev/vdb"
+     
           
-    - name: Install Prometheus, alertmanager, blackbox-exporter and loki
-      import_tasks: configPrometheus.yml
+   - name: install grafana, get certificate to deploy on grafana on https.
+     import_playbook: configureGrafana.yml
+     vars:
+       cert_domain: "206-12-92-26.cloud.computecanada.ca"
+     
+   - name: install prometheus, alertmanager, blackboxexporter
+     import_playbook: configPrometheus.yml
