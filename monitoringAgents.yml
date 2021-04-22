@@ -25,21 +25,21 @@
         notify:
         - restart nginx
 
-    handlers:
-      - name: restart nginx
-        become: yes
-        service:
-          name: nginx
-          state: restarted
+  handlers:
+    - name: restart nginx
+      become: yes
+      service:
+        name: nginx
+        state: restarted
 
-    vars:
+  vars:
       # monitoring:monitoring
-      monitoring_nginx_htpasswd: |
-        monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
+    monitoring_nginx_htpasswd: |
+      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
       
       
 
-- hosts: [omero_server]
+- hosts: omero_server
   roles:
     - role: ome.prometheus_jmx
     
@@ -63,7 +63,7 @@
       notify:
       - restart omero-server    
 
-- hosts: [omero_web]
+- hosts: omero_web
   roles:
     - role: ome.omero_web_django_prometheus
     
@@ -85,7 +85,7 @@
       state: restarted    
     
 
-- hosts: [omero_db]               
+- hosts: omero_db               
   roles:
     - role: ome.prometheus_postgres
       prometheus_postgres_dbname: omero

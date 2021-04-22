@@ -2,7 +2,7 @@
 
 - name: Create Prometheus/Grafana server
   hosts: grafana
-  gather_facts: false
+#  gather_facts: false
   tasks:
 #    - name: create instance to use as grafana server
 #      import_role:
@@ -46,10 +46,10 @@
 #        lvm_vgdevice: "/dev/vdb"
      
           
-    - name: install grafana, get certificate to deploy on grafana on https.
-      import_tasks: configureGrafana.yml
-      vars:
-        cert_domain: "206-12-92-26.cloud.computecanada.ca"
+#    - name: install grafana, get certificate to deploy on grafana on https.
+#      import_tasks: configureGrafana.yml
+#      vars:
+#        cert_domain: "206-12-92-26.cloud.computecanada.ca"
      
-    - name: install prometheus, alertmanager, blackboxexporter
+    - name: install prometheus
       import_tasks: configPrometheus.yml

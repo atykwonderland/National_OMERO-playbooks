@@ -129,15 +129,18 @@ roles:
 
   - name: sco.promtail 
     src: https://github.com/stephenogg/ansible-role-promtail
+    
+  - name: sco.omero_prometheus_exporter
+    src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter 
 
   - src: cloudalchemy.prometheus
-    version: 2.17.0
+    version: 3.0.0
         
   - src: cloudalchemy.blackbox-exporter
     version: 0.9.3  
     
   - src: cloudalchemy.node_exporter
-    version: 1.0.0
+    version: 2.0.0
     
   - src: cloudalchemy.alertmanager
     version: 0.19.1

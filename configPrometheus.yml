@@ -42,6 +42,7 @@
 - name: install loki
   import_role:
     name: sco.loki
+  become: true
   vars:
     loki_db_dir: "/data/loki"      
 
