@@ -75,13 +75,13 @@
                   job: omerologs
                   __path__: /opt/omero/server/OMERO.server/var/log/*.log
   
-           - job_name: "postgres"
-             static_configs:
-               - targets:
-                   - localhost
-                 labels:
-                   job: postgreslogs
-                   __path__: /var/log/postgres/*.log           
+          - job_name: "postgres"
+            static_configs:
+              - targets:
+                  - localhost
+                labels:
+                  job: postgreslogs
+                  __path__: /var/log/postgres/*.log           
                      
   tasks:
     - name: omero-server prometheus jmx agents
