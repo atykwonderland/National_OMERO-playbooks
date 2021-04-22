@@ -4,7 +4,7 @@
   roles:
     - role: cloudalchemy.node_exporter
       become: true
-  
+
   tasks:
       - name: Create monitoring htpasswd
         become: yes
@@ -52,7 +52,37 @@
       vars:
         omero_prometheus_exporter_omero_user: omero-monitoring
         omero_prometheus_exporter_omero_password: omero-monitoring
-    
+        
+    - role: sco.promtail
+      become: true
+      vars:
+        loki_host: "206-12-92-26.cloud.computecanada.ca"
+        loki_extra_scrape_configs:
+          - job_name: "nginx"
+            entry_parser: raw
+            static_configs:
+              - targets:
+                  - localhost
+                labels:
+                  job: nginx
+                  __path__: /var/log/nginx/*log
+                  
+          - job_name: "omero"
+            static_configs:
+              - targets:
+                  - localhost
+                labels:
+                  job: omerologs
+                  __path__: /opt/omero/server/OMERO.server/var/log/*.log
+  
+           - job_name: "postgres"
+             static_configs:
+               - targets:
+                   - localhost
+                 labels:
+                   job: postgreslogs
+                   __path__: /var/log/postgres/*.log           
+                     
   tasks:
     - name: omero-server prometheus jmx agents
       become: yes
