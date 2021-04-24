@@ -4,6 +4,12 @@
   roles:
     - role: cloudalchemy.node_exporter
       become: true
+      
+    - role: sco.promtail
+      become: true
+      vars:
+        loki_host: "206-12-92-26.cloud.computecanada.ca"
+      
 
   tasks:
       - name: Create monitoring htpasswd
@@ -12,6 +18,7 @@
           content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
           dest: /etc/nginx/monitoring.htpasswd
           mode: 0644
+        when: {{ omero_node == true }}  
 
       # This is fine to apply to all servers because if an exporter doesn't
       # exist it will return an error, and we know which exporters to expect
@@ -22,6 +29,7 @@
           dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
           src: confd-nested-proxy-exporters.conf
           mode: 0644
+        when: {{ omero_node == true }}   
         notify:
         - restart nginx
 
@@ -53,35 +61,6 @@
         omero_prometheus_exporter_omero_user: omero-monitoring
         omero_prometheus_exporter_omero_password: omero-monitoring
         
-    - role: sco.promtail
-      become: true
-      vars:
-        loki_host: "206-12-92-26.cloud.computecanada.ca"
-        loki_extra_scrape_configs:
-          - job_name: "nginx"
-            entry_parser: raw
-            static_configs:
-              - targets:
-                  - localhost
-                labels:
-                  job: nginx
-                  __path__: /var/log/nginx/*log
-                  
-          - job_name: "omero"
-            static_configs:
-              - targets:
-                  - localhost
-                labels:
-                  job: omerologs
-                  __path__: /opt/omero/server/OMERO.server/var/log/*.log
-  
-          - job_name: "postgres"
-            static_configs:
-              - targets:
-                  - localhost
-                labels:
-                  job: postgreslogs
-                  __path__: /var/log/postgres/*.log           
                      
   tasks:
     - name: omero-server prometheus jmx agents
