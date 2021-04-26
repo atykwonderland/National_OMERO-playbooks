@@ -228,7 +228,7 @@
 
     # Since Nginx isn't installed until later the directories are created in advance
     - name: Create nginx include directories
-      become: yes
+      become: true
       file:
         path: "{{ item }}"
         recurse: yes
@@ -238,14 +238,14 @@
         - /etc/nginx/conf.d-nested-includes
 
     - name: NGINX - websocket proxy support
-      become: yes
+      become: true
       template:
         src: ./templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
       
     - name: create letsencrypt challenge directory for later use
-      become: yes
+      become: true
       file:
         path: /srv/www/letsencrypt/.well-known/
         recurse: yes
@@ -311,7 +311,7 @@
   tasks:
   
     - name: Create a figure scripts directory
-      become: yes
+      become: true
       file:
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
@@ -321,7 +321,7 @@
         group: "omero-server"
 
     - name: Download the Figure_To_Pdf.py script
-      become: yes
+      become: true
       get_url:
         url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
@@ -331,7 +331,7 @@
         force: yes
 
     - name: Create a workshop_scripts directory
-      become: yes
+      become: true
       file:
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts
         state: directory
@@ -341,7 +341,7 @@
         group: "omero-server"
 
     - name: Download the Scipy_Gaussian_Filter.py script
-      become: yes
+      become: true
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
@@ -351,7 +351,7 @@
         force: yes
 
     - name: Download the simple_frap.py script
-      become: yes
+      become: true
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
@@ -361,7 +361,7 @@
         force: yes
 
     - name: Download the simple_frap_with_figure.py script
-      become: yes
+      become: true
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap_with_figure.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
@@ -372,7 +372,7 @@
 
 
     - name: Allow managed repo group to login
-      become: yes
+      become: true
       lineinfile:
         path: /etc/security/access.conf
         regexp: "{{ omero_server_system_managedrepo_group }}"
@@ -412,7 +412,7 @@
 
     # (Total cores / 2), leaving some for WSGI
     - name: NGINX - Performance tuning - worker processes
-      become: yes
+      become: true
       replace:
         dest: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
@@ -420,7 +420,7 @@
 
     # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
-      become: yes
+      become: true
       replace:
         path: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
@@ -430,14 +430,15 @@
     # https://github.com/ome/omero-web/issues/118
     # The downside is that it won't be automatically cleared out 
     - name: Create another temporary directory since OMERO doesn't limit sizes and fills up /tmp
-      become: yes
+      become: true
       file:
         path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
         state: directory
         mode: 0700
         owner: "{{ omero_server_system_user }}"
      
-
+    - name: edit nginx.conf to load ngx_http_geoip2_module.so
+      become: true
 
 
 
