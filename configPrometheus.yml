@@ -24,7 +24,7 @@
         - targets:
           - omerocloud.med.ualberta.ca:9187
           - 206-12-94-73.cloud.computecanada.ca:9187
-          - 206-12-95-221.cloud.computecanada.ca:9187     
+          - 206-12-95-221.cloud.computecanada.ca:9187               
             
 - name: install alertmanager
   import_role:
