@@ -1,2 +1,0 @@
-#!/bin/sh
-geoipupdate -f /etc/geolite/GeoIP.conf -d /etc/geolite/
