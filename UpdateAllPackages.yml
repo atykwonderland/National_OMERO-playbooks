@@ -3,7 +3,7 @@
   become: true
   become_user: root
   tasks:
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+    - name: Update apt repo and cache on all Ubuntu boxes
       apt:
         update_cache: true
         force_apt_get: true
@@ -16,7 +16,9 @@
 
     - name: Check if a reboot is needed on all servers
       register: reboot_required_file
-      stat: path=/var/run/reboot-required get_md5=no
+      stat:
+        get_checksum: no
+        path: /var/run/reboot-required
 
     - name: Reboot the box if kernel updated
       reboot:
