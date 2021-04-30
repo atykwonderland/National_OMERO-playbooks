@@ -1,4 +1,0 @@
----
-- hosts: national_omero
-  roles:
-    - role: ome.omero_web_django_prometheus

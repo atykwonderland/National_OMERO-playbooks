@@ -20,7 +20,9 @@
         floating_ip: 206.12.92.91
         flavour: "p8-12gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
-        #description: "University of Alberta's production OMERO server" - currently not used.
+        # description: "University of Alberta's production OMERO server"
+        # current version of openstack.cloud.server or maybe openstacksdk fails 
+        # when provided with a description. 20210430
         boot_volume_size: 200
         server_name: "omero"
         keypair: "SteveOKeyPairCCOMERO"
@@ -91,7 +93,10 @@
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "national_omero"
         boot_volume_size: 200
-        #server_description: "Canadian National OMERO production server" - currently not used
+        #server_description: "Canadian National OMERO production server"
+        # current version of openstack.cloud.server or maybe openstacksdk fails
+        # when provided with a description. 20210430
+        
         keypair: "SteveOKeyPairCCOMERO"
         network: "rpp-steveogg-network"
         second_volume_name: "binary_repository"     
@@ -151,7 +156,7 @@
 
 # Internal monitoring configuration for all OMERO servers
 # Currently (20210430) not enough resources to separate the grafana and prometheus servers
-# Therefore create one machine and provision with both apps.
+# Therefore create one machine and provision with both apps (see below).
 
 #- name: Create Prometheus Server
 #  hosts: prometheus
