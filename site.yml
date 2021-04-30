@@ -236,7 +236,7 @@
       import_role:
         name: ome.prometheus_jmx
         
-    - name: role for handlers and {{ omero_common_basedir }}
+    - name: "role for handlers and {{ omero_common_basedir }}"
       import_role:
         name: ome.omero_common
         

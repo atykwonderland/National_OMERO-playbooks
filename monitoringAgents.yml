@@ -48,11 +48,11 @@
         state: restarted
 
   vars:
-      # monitoring:monitoring
+    # monitoring:monitoring
     monitoring_nginx_htpasswd: |
       monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
-      
-      
+
+
 
 - hosts: omero_server
   roles:
