@@ -3,7 +3,7 @@
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-- hosts: omero_training   # this is defined as 206.12.95.221 in the inventory
+# - hosts: omero_training   # this is defined as 206.12.95.221 in the inventory
   gather_facts: False
   vars:
     https_certificate_domain: "206-12-95-221.cloud.computecanada.ca"
@@ -182,7 +182,7 @@
         recurse: yes
         state: directory
         
-    - name: create mounot on /OMERO if create_second_voluem == true
+    - name: create mount on /OMERO if create_second_volume == true
       import_role:  
         name: ome.lvm_partition
       become: true  
