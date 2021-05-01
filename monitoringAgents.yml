@@ -17,7 +17,7 @@
   tasks:
       - name: set fact
         set_fact:
-          omero_node: "{{ 'true' if ((ansible_nodename == 'omero') or (ansible_nodename == 'national-omero') or (ansible_nodename == 'omero-dev')) else 'false' }}"
+          omero_node: "{{ 'true' if ((ansible_nodename == 'omero') or (ansible_nodename == 'national_omero') or (ansible_nodename == 'omero_training')) else 'false' }}"
         
       - name: Create monitoring htpasswd
         become: yes
@@ -27,9 +27,6 @@
           mode: 0644
         when: omero_node 
 
-      # This is fine to apply to all servers because if an exporter doesn't
-      # exist it will return an error, and we know which exporters to expect
-      # when scraping
       - name: Create nginx proxy for prometheus exporters
         become: yes
         copy:
@@ -75,7 +72,6 @@
         omero_prometheus_exporter_omero_password: omero-monitoring
 
   tasks:
-
     - name: omero-server prometheus jmx agents
       become: yes
       copy:

@@ -21,8 +21,8 @@
         flavour: "p12-16gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         # description: "University of Alberta's production OMERO server"
-        # current version of openstack.cloud.server or maybe openstacksdk fails 
-        # when provided with a description. 20210430
+        # current version of openstack.cloud.server or maybe the python openstacksdk fails 
+        # when provided with any description. 20210430
         boot_volume_size: 200
         server_name: "omero"
         keypair: "SteveOKeyPairCCOMERO"
@@ -36,7 +36,7 @@
           - monitoring
         second_volume_name: "binary_repository"
         second_volume_size_gb: 9500
-        second_volume_description: "mount this on /OMERO to act as the binary repository"
+        second_volume_description: "/OMERO binary repository"
         device: "/dev/vdb"
       delegate_to: localhost  
         
@@ -128,7 +128,7 @@
 - name: Create backup server
   hosts: backup
   tasks:
-    - name: Create backup server instance
+    - name: Create instance to backup national omero data
       import_role:
         name: sco.create_instance
       vars:
@@ -146,7 +146,7 @@
         network: "rpp-steveogg-network"
         second_volume_name: "backup"     
         second_volume_size_gb: 20000
-        second_volume_description: "Volume backup omero binary repository on 206.12.94.73"
+        second_volume_description: "backup omero binary repository"
         device: "/dev/vdb"
         security_group_list:
           - default
@@ -231,9 +231,14 @@
       
     - name: install prometheus, alertmanager, blackboxexporter
       import_playbook: configPrometheus.yml
+
+
+
         
     
 - name: Configure instances for monitoring
+  import_playbook: monitoringAgents.yml
+  
   hosts: [monitored]
   tasks:
     - name: install node exporter
