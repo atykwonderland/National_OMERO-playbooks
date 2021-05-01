@@ -4,16 +4,16 @@ ansible_user=ubuntu
 ansible_ssh_private_key_file=/Volumes/GoogleDrive/My Drive/P/OMEROCC/SteveOPrivateKeyCCOMERO.priv.pem
 
 
-[omero]
+[uofa_omero]
 206.12.92.91
 
-[omero_dev]
+[omero_training]
 206.12.95.221
 
 [national_omero]
 206.12.94.73 
 
-[backup_server]
+[backup]
 206.12.94.9
 
 [grafana]

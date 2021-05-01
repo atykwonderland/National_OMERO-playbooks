@@ -9,7 +9,7 @@
 # /dev/vdb to act as the OMERO binary repository.
 
 - name: Create/Configure UofA production instance
-  hosts: omero
+  hosts: uofa_omero
   tasks:
     - name: create the instance in the cloud
       import_role:
@@ -46,7 +46,7 @@
           fqdn: "206-12-92-91.cloud.computecanada.ca"
 
 - name: Create Training Server
-  hosts: omero_dev
+  hosts: omero_training
   tasks:
     - name: create training server instance"
       import_role:
@@ -125,7 +125,7 @@
       
 ##Create Backup Server
 - name: Create backup server
-  hosts: backup_server
+  hosts: backup
   tasks:
     - name: Create backup server instance
       import_role:

@@ -3,7 +3,7 @@
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-- hosts: omero_dev   # this is defined as 206.12.95.221 in the inventory
+- hosts: omero_training   # this is defined as 206.12.95.221 in the inventory
   gather_facts: False
   vars:
     https_certificate_domain: "206-12-95-221.cloud.computecanada.ca"
