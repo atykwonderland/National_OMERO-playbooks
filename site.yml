@@ -18,7 +18,7 @@
         cloud: cc_arbutus_default_dev
         create_second_volume: true
         floating_ip: 206.12.92.91
-        flavour: "p8-12gb"
+        flavour: "p12-16gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         # description: "University of Alberta's production OMERO server"
         # current version of openstack.cloud.server or maybe openstacksdk fails 
@@ -33,6 +33,7 @@
           - ssh
           - ping
           - omero
+          - monitoring
         second_volume_name: "binary_repository"
         second_volume_size_gb: 4000
         second_volume_description: "mount this on /OMERO to act as the binary repository"
@@ -67,6 +68,7 @@
           - ssh
           - ping
           - omero
+          - monitoring
 #        second_volume_name: "binary_repository"
 #        second_volume_description: "mount this on /OMERO to act as the binary repository"
 #        second_volume_size_gb: 50
@@ -109,6 +111,7 @@
           - ping
           - omero
           - ssh
+          -monitoring
       delegate_to: localhost  
         
     - name: configure the national production server 
@@ -146,6 +149,7 @@
           - default
           - ssh
           - ping
+          -monitoring
       delegate_to: localhost    
           
     - name: configure newly created backup instance 
@@ -212,6 +216,7 @@
           - ssh
           - web
           - ping
+          - monitoring
       delegate_to: localhost    
           
     - name: install grafana, get certificate to deploy on grafana on https.
