@@ -35,7 +35,7 @@
           - omero
           - monitoring
         second_volume_name: "binary_repository"
-        second_volume_size_gb: 4000
+        second_volume_size_gb: 9500
         second_volume_description: "mount this on /OMERO to act as the binary repository"
         device: "/dev/vdb"
       delegate_to: localhost  
@@ -59,7 +59,9 @@
         image: Ubuntu-20.04-Focal-x64-2020-12
         boot_volume_size: 50
         server_name: "omero_training"
-        #description: "OMERO server used for training workshops" -currently not used
+        #description: "OMERO server used for training workshops"
+        # current version of openstack.cloud.server or maybe openstacksdk fails 
+        # when provided with a description. 20210430        
         keypair: "SteveOKeyPairCCOMERO"
         network: "def-steveogg-dev-network"
         security_group_list:
@@ -97,8 +99,7 @@
         boot_volume_size: 200
         #server_description: "Canadian National OMERO production server"
         # current version of openstack.cloud.server or maybe openstacksdk fails
-        # when provided with a description. 20210430
-        
+        # when provided with a description. 20210430      
         keypair: "SteveOKeyPairCCOMERO"
         network: "rpp-steveogg-network"
         second_volume_name: "binary_repository"     
@@ -138,7 +139,9 @@
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "omero_backup"
         boot_volume_size: 200
-        #description: "server to act as backup for OMERO instance on 206.12.94.73" - currently not used
+        #description: "server to act as backup for OMERO
+        # current version of openstack.cloud.server or maybe openstacksdk fails 
+        # when provided with a description. 20210430        
         keypair: "SteveOKeyPairCCOMERO"
         network: "rpp-steveogg-network"
         second_volume_name: "backup"     
@@ -177,7 +180,9 @@
 #        image: Ubuntu-20.04-Focal-x64-2020-12
 #        server_name: "prometheus"
 #        boot_volume_size: 9500
-#        #description: "" - currently not used
+#        #description: ""
+#        # current version of openstack.cloud.server or maybe openstacksdk fails 
+#        # when provided with a description. 20210430
 #        keypair: "SteveOKeyPairCCOMERO"
 #        network: "def-steveogg-network"
 #        security_group_list:
@@ -203,8 +208,10 @@
         flavour: "p16-24gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         server_name: "grafana"
-        boot_volume_size: 500
-        #description: "" - currently not used
+        boot_volume_size: 200
+        #description: "Prometheus/Grafana for OMERO monitoring"
+        # current version of openstack.cloud.server or maybe openstacksdk fails 
+        # when provided with a description. 20210430        
         keypair: "SteveOKeyPairCCOMERO"
         network: "def-steveogg-network"
         second_volume_name: "data"     
@@ -219,7 +226,7 @@
           - monitoring
       delegate_to: localhost    
           
-    - name: install grafana, get certificate to deploy on grafana on https.
+    - name: install grafana, get certificate to deploy grafana on https.
       import_playbook: configureGrafana.yml
       
     - name: install prometheus, alertmanager, blackboxexporter
