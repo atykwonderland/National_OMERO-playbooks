@@ -40,10 +40,11 @@
         device: "/dev/vdb"
       delegate_to: localhost  
         
-    - name: configure the newly created instance
-      import_playbook: productionServer.yml
-        vars:
-          fqdn: "206-12-92-91.cloud.computecanada.ca"
+- name: configure the newly created instance
+  import_playbook: productionServer.yml
+    vars:
+      machine: uofa_omero
+      fqdn: "206-12-92-91.cloud.computecanada.ca"
 
 - name: Create Training Server
   hosts: omero_training
@@ -77,10 +78,11 @@
 #        device: "/dev/vdb"
       delegate_to: localhost  
         
-    - name: configure the newly created instance as a training server
-      import_playbook: trainingServer.yml
-      vars:
-        fqdn: "206-12-95-221.cloud.computecanada.ca"
+- name: configure the newly created instance as a training server
+  import_playbook: trainingServer.yml
+  vars:
+    machine: omero_training
+    fqdn: "206-12-95-221.cloud.computecanada.ca"
         
 #Create National Production Server
 - name: Create National OMERO Production Server
@@ -115,13 +117,14 @@
           -monitoring
       delegate_to: localhost  
         
-    - name: configure the national production server 
+- name: configure the national production server 
 ## Configure National OMERO.server. This is currently
 ## a one-node server hosting the db_server, omero_server and web_server from 
 ## a single instance.
-    import_playbook: productionServer.yml
-    vars:
-      fqdn: "206-12-94-73.cloud.computecanada.ca"
+  import_playbook: productionServer.yml
+  vars:
+    host: national_omero
+    fqdn: "206-12-94-73.cloud.computecanada.ca"
       
       
 ##Create Backup Server

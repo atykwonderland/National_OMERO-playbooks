@@ -2,7 +2,7 @@
 # Deploy server(s) on Ubuntu 20.04.
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
-# - hosts: national_omero
+ - hosts: "{{ machine }}"
   vars:
     https_certificate_domain: "{{ fqdn | default('localhost') }}"
     postgresql_version: "12"

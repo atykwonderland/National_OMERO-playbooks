@@ -1,0 +1,37 @@
+- name: Create Training Server
+  hosts: omero_training
+  gather_facts: false
+  tasks:
+    - name: create training server instance"
+      import_role:
+        name: sco.create_instance
+      vars:
+        cloud: cc_arbutus_default_dev
+        create_second_volume: false     
+        floating_ip: 206.12.95.221
+        flavour: "p4-6gb"
+        image: Ubuntu-20.04-Focal-x64-2020-12
+        boot_volume_size: 50
+        server_name: "omero_training"
+        #description: "OMERO server used for training workshops"
+        # current version of openstack.cloud.server or maybe openstacksdk fails 
+        # when provided with a description. 20210430        
+        keypair: "SteveOKeyPairCCOMERO"
+        network: "def-steveogg-dev-network"
+        security_group_list:
+          - default
+          - web
+          - ssh
+          - ping
+          - omero
+          - monitoring
+#        second_volume_name: "binary_repository"
+#        second_volume_description: "mount this on /OMERO to act as the binary repository"
+#        second_volume_size_gb: 50
+#        device: "/dev/vdb"
+      delegate_to: localhost  
+        
+- name: Configure the thing.
+  import_playbook: trainingServer.yml
+  vars:
+    fqdn: "206-12-95-221.cloud.computecanada.ca"
