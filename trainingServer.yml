@@ -185,7 +185,7 @@
         
     - name: create mount on /OMERO if create_second_volume == true
       import_role:  
-        name: ome.lvm_partition
+        name: sco.lvm_partition
       become: true  
       vars:
         lvm_lvname: omero
