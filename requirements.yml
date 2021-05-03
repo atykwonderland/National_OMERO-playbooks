@@ -22,10 +22,6 @@ roles:
 ##  - name: ome.iptables_raw
 ##    version: 0.3.1
 #
-#  - name: sco.lvm_partition
-#    src: https://github.com/stephenogg/ansible-role-lvm_partition
-#    version: 0.0.1
-#
 ##  - name: ome.network
 ##    version: 1.1.4
 #
@@ -117,6 +113,9 @@ roles:
 #  - name: sco.letsencrypt
 #    src: https://github.com/stephenogg/ansible-role-letsencrypt
 #    version: 0.1.2
+#
+#  - name: sco.lvm_partition
+#    src: https://github.com/stephenogg/ansible-role-lvm_partition
 
   - name: sco.create_instance
     src: https://github.com/stephenogg/ansible-role-create-instance
@@ -129,7 +128,9 @@ roles:
 
   - name: sco.promtail 
     src: https://github.com/stephenogg/ansible-role-promtail
-    
+ 
+ # My version of omero_prometheus_exporter includes the dict to select the correct ice 
+ # version depending on the OS distribution. CentOS7,8 or Ubuntu18,20        
   - name: sco.omero_prometheus_exporter
     src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter 
 
@@ -145,9 +146,7 @@ roles:
   - src: cloudalchemy.alertmanager
     version: 0.19.1
  
- # My version includes the dict to select the correct ice version depending on the 
- # OS distribution. CentOS7,8 or Ubuntu18,20     
-  - name: sco.omero-prometheus-exporter
+  - name: sco.omero_prometheus_exporter
     src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter
     
     
