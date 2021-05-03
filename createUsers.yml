@@ -1,5 +1,5 @@
 ---
-# - hosts: omero_dev
+- hosts: omero_training
   vars:
     omerodir: /opt/omero/server/OMERO.server
     venv_server: /opt/omero/server/venv3
