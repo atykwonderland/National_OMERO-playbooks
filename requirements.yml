@@ -137,7 +137,11 @@ roles:
  # My version of omero_prometheus_exporter includes the dict to select the correct ice 
  # version depending on the OS distribution. CentOS7,8 or Ubuntu18,20        
   - name: sco.omero_prometheus_exporter
-    src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter 
+    src: https://github.com/stephenogg/ansible-role-omero-prometheus-exporter
+    
+  - name: sco.nginx_geoip
+    src: https://github.com/stephenogg/ansible-role-nginx-geoip 
+    
 
   - src: cloudalchemy.prometheus
     version: 3.0.0
