@@ -25,12 +25,19 @@
           - omerocloud.med.ualberta.ca:9187
           - 206-12-94-73.cloud.computecanada.ca:9187
           - 206-12-95-221.cloud.computecanada.ca:9187
-
-      django:
-        - targets:
-          - omerocloud.med.ualberta.ca/django_prometheus/metrics
-          - 206-12-94-73.cloud.computecanada.ca/django_prometheus/metrics
-          - 206-12-95-221.cloud.computecanada.ca/django_prometheus/metrics              
+    
+    prometheus_scrape_jobs:
+    - job_name: django-prometheus
+      basic_auth:
+        username: monitoring
+        password: "monitoring"
+      metrics_path: /django_prometheus/metrics
+      scheme: https
+      static_configs:
+      - targets:
+        - omerocloud.med.ualberta.ca
+        - 206-12-94-73.cloud.computecanada.ca
+        - 206-12-95-221.cloud.computecanada.ca
                          
             
 - name: install alertmanager

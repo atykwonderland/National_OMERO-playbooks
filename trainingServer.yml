@@ -238,6 +238,8 @@
       https_letsencrypt_enabled: true
       https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain }}"
       letsencrypt_email: "sogg@ualberta.ca"
+      
+    - role: sco.nginx_geoip  
     
   tasks:
   

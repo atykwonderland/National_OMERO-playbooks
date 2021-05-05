@@ -1,0 +1,6 @@
+---
+
+- name: Add geoIP recognition for loki
+  hosts: omero_training
+  roles:
+    - role: sco.nginx_geoip
