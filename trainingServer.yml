@@ -332,7 +332,7 @@
 # Uncomment this if you want to create the 4 groups "Lab1, Lab2, Lab3 and Lab4", the two
 # training users that are administrators and 50 regular users numbered user-1 through user-50.
 # each of the users passwords are "ome". 
-- include: createUsers.yml
+- import_playbook: createUsers.yml
  
         
          
