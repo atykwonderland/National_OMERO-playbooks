@@ -1,23 +1,23 @@
-- name: Create Training Server
-  hosts: omero_training
-  gather_facts: false
+---
+- name: Create/Configure UofA production instance
+  hosts: localhost
   tasks:
-    - name: create training server instance
+    - name: create the instance in the cloud
       import_role:
         name: sco.create_instance
       vars:
         cloud: cc_arbutus_default_dev
-        create_second_volume: false     
-        floating_ip: 206.12.95.221
-        flavour: "p8-12gb"
+        create_second_volume: true
+        floating_ip: 206.12.92.91
+        flavour: "p12-16gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
-        boot_volume_size: 50
-        server_name: "omero_training"
-        #description: "OMERO server used for training workshops"
-        # current version of openstack.cloud.server or maybe openstacksdk fails 
-        # when provided with a description. 20210430        
+        # description: "University of Alberta's production OMERO server"
+        # current version of openstack.cloud.server or maybe the python openstacksdk fails 
+        # when provided with any description. 20210430
+        boot_volume_size: 200
+        server_name: "omero"
         keypair: "SteveOKeyPairCCOMERO"
-        network: "def-steveogg-dev-network"
+        network: def-steveogg-dev-network
         security_group_list:
           - default
           - web
@@ -25,13 +25,17 @@
           - ping
           - omero
           - monitoring
-#        second_volume_name: "binary_repository"
-#        second_volume_description: "mount this on /OMERO to act as the binary repository"
-#        second_volume_size_gb: 50
-#        device: "/dev/vdb"
-      delegate_to: localhost  
+        second_volume_name: "binary_repository"
+        second_volume_size_gb: 9500
+        second_volume_description: "/OMERO binary repository"
+        device: "/dev/vdb"
+ 
         
-- name: Configure the thing.
-  import_playbook: trainingServer.yml
+- name: configure the newly created instance
+  hosts: uofa_omero
   vars:
-    fqdn: "206-12-95-221.cloud.computecanada.ca"
+    fqdn: "206-12-92-91.cloud.computecanada.ca"
+  tasks:
+    - name: import the configuration tasks
+      become: true
+      import_tasks: productionServer.yml
