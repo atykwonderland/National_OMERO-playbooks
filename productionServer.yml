@@ -240,6 +240,7 @@
                     
   roles:
     - role: sco.lvm_partition
+      become: true
       lvm_lvname: omero
       lvm_lvmount: /OMERO
       lvm_lvsize: "{{ second_volume_size_gb }}"
