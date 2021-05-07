@@ -103,7 +103,7 @@
       state: restarted    
     
 
-- hosts: omero_db               
+- hosts: omero_db              
   roles:
     - role: ome.prometheus_postgres
       prometheus_postgres_dbname: omero

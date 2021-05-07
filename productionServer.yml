@@ -285,7 +285,6 @@
         
 #Install the OMERO.web into /opt/omero/web  
     - role: ome.omero_web
-      vars:
       omero_web_systemd_limit_nofile: 16384
     
     - role: sco.letsencrypt

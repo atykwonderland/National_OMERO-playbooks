@@ -1,0 +1,6 @@
+---
+- hosts: uofa_omero
+  roles:
+    - role: ome.omero_web
+      omero_web_systemd_limit_nofile: 16384
+ 
