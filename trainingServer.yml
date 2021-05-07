@@ -152,6 +152,7 @@
     - name: Install Prerequisites | unzip wget bc cron, etc. 
       become: true
       apt:
+        force_apt_get: true
         name:
           - mencoder  # for the make movie script
           - bzip2

@@ -2,8 +2,9 @@
 # Deploy server(s) on Ubuntu 20.04.
 # Set https_letsencrypt_enabled to True (variable is set in letsencrypt.yml) in production to ensure certbot
 # handles the letsencrypt certificate setup
-- hosts: "{{ machine }}"
+- hosts: uofa_omero
   vars:
+    fqdn: "omerocloud.med.ualberta.ca"
     https_certificate_domain: "{{ fqdn | default('localhost') }}"
     postgresql_version: "12"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
@@ -196,6 +197,7 @@
     - name: Install Prerequisites | unzip wget bc cron etc. 
       become: true
       apt:
+        force_apt_get: true
         name:
           - mencoder  # for the make movie script
           - bzip2
@@ -377,7 +379,7 @@
       register: result
       tags: test
        
-    - name: Use omero-monitoroing's id to set restrictions to be a read-only light-admin
+    - name: Use omero-monitoring's id to set restrictions to be a read-only light-admin
       shell: "omero obj map-set Experimenter:{{result.query_result[0].id}} config AdminPrivilege:{{item}} false -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
       tags: test
       with_items:

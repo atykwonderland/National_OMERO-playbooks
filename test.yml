@@ -1,6 +1,7 @@
 ---
 - name: Create/Configure UofA production instance
-  hosts: localhost
+  hosts: uofa_omero
+  gather_facts: false
   tasks:
     - name: create the instance in the cloud
       import_role:
@@ -9,7 +10,7 @@
         cloud: cc_arbutus_default_dev
         create_second_volume: true
         floating_ip: 206.12.92.91
-        flavour: "p12-16gb"
+        flavour: "p8-12gb"
         image: Ubuntu-20.04-Focal-x64-2020-12
         # description: "University of Alberta's production OMERO server"
         # current version of openstack.cloud.server or maybe the python openstacksdk fails 
@@ -29,13 +30,8 @@
         second_volume_size_gb: 9500
         second_volume_description: "/OMERO binary repository"
         device: "/dev/vdb"
+      delegate_to: localhost
  
         
 - name: configure the newly created instance
-  hosts: uofa_omero
-  vars:
-    fqdn: "206-12-92-91.cloud.computecanada.ca"
-  tasks:
-    - name: import the configuration tasks
-      become: true
-      import_tasks: productionServer.yml
+  import_playbook: productionServer.yml
