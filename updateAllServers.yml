@@ -1,0 +1,7 @@
+---
+
+- hosts: monitored
+  tasks:
+    - name: Update all packages
+      become: true
+      import_tasks: updateAllPackages.yml
