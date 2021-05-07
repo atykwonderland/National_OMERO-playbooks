@@ -420,8 +420,8 @@ tasks:
     file:
       path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
       state: directory
-      mode: 0700
-      owner: "{{ omero_server_system_user }}"
+        mode: 0700
+        owner: "{{ omero_server_system_user }}"
 
 
         
