@@ -210,19 +210,6 @@
           - openssl
         state: present
         
-    - name: Update all installed packages
-      become: true
-      apt:
-        name: "*"
-        state: latest
-      register: packages_updated
-        
-    - name: Reboot the machine
-      become: true
-      reboot:
-      when: packages_updated.changed        
-
-
     # Since Nginx isn't installed until later the directories are created in advance
     - name: Create nginx include directories
       become: true
@@ -304,7 +291,9 @@
         https_certificate_domain: "{{ fqdn }}"
         letsencrypt_email: "sogg@ualberta.ca"
         https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ fqdn | default('localhost') }}"
-    
+
+    - role: sco.nginx_geoip
+        
   tasks:
   
     - name: Create a figure scripts directory
