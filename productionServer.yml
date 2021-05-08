@@ -53,6 +53,7 @@
       - omero_figure
       - omero_fpbioimage
       - omero_iviewer
+      - omero_mapr
       - omero_parade
       - omero_webtagging_autotag
       - omero_webtagging_tagsearch
@@ -77,6 +78,11 @@
           target: _blank
       - label: Tag Search
         link: tagsearch
+      - label: Key-Value
+        link:
+          viewname: maprindex_keyvalue
+        attrs:
+         title: Search for manually-added Key-Value pairs
 
     omero_web_apps_config_append:
       omero.web.open_with:
@@ -100,6 +106,17 @@
               - well
             script_url: omero_iviewer/openwith.js
             label: OMERO.iviewer
+            
+      omero.web.mapr.config:
+        - menu: keyvalue
+          config:
+            default:
+            - Any Value
+            all: []
+            ns:
+            - openmicroscopy.org/omero/client/mapAnnotation
+            label: KeyValue
+      
       omero.web.ui.center_plugins:
         - - Auto Tag
           - omero_webtagging_autotag/auto_tag_init.js.html
