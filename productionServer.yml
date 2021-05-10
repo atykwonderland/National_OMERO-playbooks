@@ -383,7 +383,36 @@
         regexp: "{{ omero_server_system_managedrepo_group }}"
         insertbefore: BOF
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
-
+        
+    - name: Create Importer-1, a restricted admin who can import others' data
+      shell: "omero user add -a importer-1 importer-1 importer-1 system  -P ome --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      
+    - name: Retrieve importer-1's omero userid
+      become: true
+      become_user: postgres
+      community.general.postgresql_query:
+        db: omero
+        query: "select id from experimenter where firstname = 'importer-1'"
+      register: result
+      tags: test
+       
+    - name: Use importer-1's id to set restrictions to only sudo so they can import data for others
+      shell: "omero obj map-set Experimenter:{{result.query_result[0].id}} config AdminPrivilege:{{item}} false -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
+      tags: test
+      with_items:
+        - WriteOwned
+        - WriteFile
+        - WriteManagedRepo
+        - DeleteOwned
+        - DeleteFile
+        - DeleteManagedRepo
+        - Chgrp
+        - Chown
+        - ModifyGroup
+        - ModifyUser
+        - ModifyGroupMembership
+        - WriteScriptRepo
+    
     - name: Create omero-monitoring, a restricted admin who can export prometheus data
       shell: "omero user add -a omero-monitoring omero-monitoring omero-monitoring system  -P omero-monitoring --ignore-existing -s {{ host | quote }} -u {{ omero_user | quote }} --password {{ password | quote }}"
       
