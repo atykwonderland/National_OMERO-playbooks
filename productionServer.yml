@@ -134,6 +134,9 @@
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_web_config_set:
+        # These logo locations are for the UofA logos.
+      omero.web.login_logo: "https://lh3.googleusercontent.com/iBRpWkVfDcpDaf8_43t8wX9m8uX8rPSGzWFO91wTCL3XEUpeuufDGlGDKc7KxvSeT6zDIprjxkcRAeArg5lGgH_joq1GwmTGWWYm7Wp7GKJ19e8aeBV_s1kT3CtPWTJzb9nzkM-w1-c=w2400"
+      omero.web.top_logo: "https://lh3.googleusercontent.com/ZacQhsgB1SPMOKJqZLk1PaU0-nnSB0DqsjibD_g-3Qtv5jSBRQpoA6cCz22gHSfDJf-z70zCJDRM-ehpF5IUjdytrB7G67b9zrb27O1LMomhNVEEhcwiidDBlnf2yN4qi-EOk6s0G14=w2400"
       omero.web.nginx_server_extra_config:
         - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
         # TODO: Move the following into a shared variable
@@ -145,6 +148,8 @@
             proxy_set_header Connection $connection_upgrade;
             proxy_read_timeout 86400;
           }
+          
+# The following variables are used for omero-py when creating importer-1 and omero-monitoring          
     omerodir: /opt/omero/server/OMERO.server
     venv_server: /opt/omero/server/venv3
     password: 'omero'
