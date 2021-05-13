@@ -86,6 +86,7 @@
          title: Search for manually-added Key-Value pairs
 
     omero_web_apps_config_append:
+      #omero.web.template_dirs: /opt/omero/web/OMERO.web/var/templates # location of custom_login_template
       omero.web.open_with:
         - - omero_figure
           - new_figure
@@ -138,12 +139,12 @@
       omero.web.session_cookie_secure: true
       omero.web.csrf_cookie_secure: true
         # These logo locations/links are for the UofA.
-      omero.web.login_logo: "https://lh3.googleusercontent.com/iBRpWkVfDcpDaf8_43t8wX9m8uX8rPSGzWFO91wTCL3XEUpeuufDGlGDKc7KxvSeT6zDIprjxkcRAeArg5lGgH_joq1GwmTGWWYm7Wp7GKJ19e8aeBV_s1kT3CtPWTJzb9nzkM-w1-c=w2400"
+      #omero.web.login_logo: "https://lh3.googleusercontent.com/iBRpWkVfDcpDaf8_43t8wX9m8uX8rPSGzWFO91wTCL3XEUpeuufDGlGDKc7KxvSeT6zDIprjxkcRAeArg5lGgH_joq1GwmTGWWYm7Wp7GKJ19e8aeBV_s1kT3CtPWTJzb9nzkM-w1-c=w2400"
       omero.web.top_logo: "https://lh3.googleusercontent.com/ZacQhsgB1SPMOKJqZLk1PaU0-nnSB0DqsjibD_g-3Qtv5jSBRQpoA6cCz22gHSfDJf-z70zCJDRM-ehpF5IUjdytrB7G67b9zrb27O1LMomhNVEEhcwiidDBlnf2yN4qi-EOk6s0G14=w2400"
       omero.web.top_logo_link: "https://www.ualberta.ca/index.html"
       
-      omero.web.index_template: "custom_login.html"
-      omero.web.login_view: "webindex_custom"
+      #omero.web.index_template: "custom_login.html"
+      #omero.web.login_view: "webindex_custom"
       
       omero.web.nginx_server_extra_config:
         - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
@@ -328,7 +329,26 @@
     - role: sco.nginx_geoip
         
   tasks:
-  
+   #TODO move this to omero_config_set: variables for the ome.omero_web role
+    - name: copy config file to server for custom login page configuration
+      become: true
+      copy:
+        content: >
+          config set omero.web.index_template "custom_login.html"
+          config append omero.web.template_dirs '"/opt/omero/web/OMERO.web/var/templates"'
+          config set omero.web.login_view "webindex_custom"
+        dest: /opt/omero/web/config/web-custom-login.omero
+        
+    - name: Copy custom_login.html to /opt/omero/web/OMERO.web/var/templates
+      become: true
+      copy:
+        src: ./files/custom_login.html
+        dest: /opt/omero/web/OMERO.web/var/templates/custom_login.html
+        owner: "omero-web"
+        group: "omero-web"
+        mode: 0664
+         
+      
     - name: Create a figure scripts directory
       become: true
       file:
