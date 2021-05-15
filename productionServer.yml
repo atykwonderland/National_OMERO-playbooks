@@ -334,6 +334,7 @@
       become: true
       copy:
         content: >
+          # {{ ansible_managed }}
           config set omero.web.index_template "custom_login.html"
           config append omero.web.template_dirs '"/opt/omero/web/OMERO.web/var/templates"'
           config set omero.web.login_view "webindex_custom"
