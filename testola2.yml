@@ -1,0 +1,4 @@
+---
+- hosts: omero_training
+  roles:
+    - role: sco.nginx_geoip
