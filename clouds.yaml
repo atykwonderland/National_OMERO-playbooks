@@ -7,7 +7,7 @@ clouds:
       user_domain_name: CCDB
       project_domain_id: e05dc10d20cf47f38ce2443f4c0d7ee5
       project_id: de23f10380ca4c16bbf052cbe3c5ea73
-      password: c0Gfils!
+      password: xxxxxxxxxxxx
     region_name: RegionOne
     interface: public
     identity_api_version: 3
@@ -20,7 +20,7 @@ clouds:
       user_domain_name: CCDB
       project_domain_id: e05dc10d20cf47f38ce2443f4c0d7ee5
       project_id: 2551340a0e984340bed09d2548a4c9bb
-      password: c0Gfils!
+      password: xxxxxxxxxxxx
     region_name: RegionOne
     interface: public
     identity_api_version: 3  
