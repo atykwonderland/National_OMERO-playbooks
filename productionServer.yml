@@ -48,7 +48,7 @@
       omero.mail.port: 587
       omero.mail.smtp.auth: true
       omero.mail.username: omero.notifications@gmail.com
-      omero.mail.password: c0Gfils!
+      omero.mail.password: EdmontonMontrealOmero
       omero.mail.smtp.starttls.enable: true
 
     # Workaround lack of restriction on temp file sizes
