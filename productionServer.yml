@@ -24,6 +24,7 @@
     # You may wish to change this variable,
     # or override it by defining the private variable os_system_users_password_override.
     os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"    
+    omero_web_public_password: public
     omero_server_config_set:
       omero.certificates.commonname: "{{ https_certificate_domain | default('localhost') }}"
       omero.client.icetransports: ssl,wss,tcp
@@ -326,6 +327,30 @@
 #Install the OMERO.web into /opt/omero/web  
     - role: ome.omero_web
       omero_web_systemd_limit_nofile: 16384
+      omero_web_config_set:
+        omero.web.public.enabled: true
+        omero.web.public.server_id: 1
+        omero.web.public.user: public
+        omero.web.public.password: "{{ omero_web_public_password }}"
+        omero.web.public.url_filter: "^/(webadmin/myphoto/|webclient/\
+          (?!(action|logout|annotate_(file|tags|comment|rating|map)|\
+          script_ui|ome_tiff|figure_script))|\
+          webgateway/(?!(archived_files|download_as)))"
+    
+    # This role only works on OMERO 5.3+
+    - role: ome.omero_user
+      omero_user_system: omero-server
+      omero_user_admin_user: root
+      omero_user_admin_pass: omero
+      omero_group_create:
+        - name: demo
+          type: read-only
+      omero_user_create:
+        - login: public
+          firstname: public
+          lastname: user
+          password: "{{ omero_web_public_password }}"
+          groups: "--group-name demo"
     
     - role: sco.letsencrypt
       vars:
