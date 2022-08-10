@@ -1,0 +1,104 @@
+# something breaks here when trying to install the web apps 
+# ModuleNotFoundError: No module named 'omero-figure'
+- hosts: national_omero_repo
+  roles:
+    - role: ome.basedeps
+    - role: ome.omero_web
+      omero_web_config_set:
+        omero.web.session_cookie_secure: true
+        omero.web.csrf_cookie_secure: true
+        omero.web.public.enabled: true
+        omero.web.public.server_id: 1
+        omero.web.public.user: public
+        omero.web.public.password: "{{ omero_web_public_password }}"
+        omero.web.public.url_filter: "^/(webadmin/myphoto/|webclient/\
+          (?!(action|logout|annotate_(file|tags|comment|rating|map)|\
+          script_ui|ome_tiff|figure_script))|\
+          webgateway/(?!(archived_files|download_as))\
+          |iviewer/|mapr/|figure/)"
+        omero.web.server_list:
+          - ['206.12.94.73', 4064, omero]
+      
+      omero_web_apps_packages:
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-mapr=={{ omero_mapr_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+      
+      omero_web_apps_names:
+        - omero-figure
+        - omero-iviewer
+        - omero-mapr
+        - omero-parade
+        - omero_fpbioimage
+        - omero_webtagging_autotag
+        - omero_webtagging_tagsearch
+
+      omero_web_apps_config_set:
+        omero.web.viewer.view: omero_iviewer.views.index
+        omero.web.mapr.config:
+          - menu: anyvalue
+            config:
+              default:
+                - Any Value
+              all: []
+              ns:
+                - openmicroscopy.org/omero/client/mapAnnotation
+              label: Any
+        omero.web.ui.center_plugins:
+        - - Auto Tag
+          - omero_webtagging_autotag/auto_tag_init.js.html
+          - auto_tag_panel
+        - - Parade
+          - omero_parade/init.js.html
+          - omero_parade
+      
+      omero_web_apps_config_append:
+        omero.web.open_with:
+          - - omero_figure
+            - new_figure
+            - supported_objects:
+                - images
+              target: _blank
+              label: OMERO.figure
+          - - omero_fpbioimage
+            - fpbioimage_index
+            - supported_objects:
+                - image
+              script_url: fpbioimage/openwith.js
+              label: FPBioimage
+          - - omero_iviewer
+            - omero_iviewer_index
+            - supported_objects:
+                - images
+                - dataset
+                - well
+              script_url: omero_iviewer/openwith.js
+              label: OMERO.iviewer
+      
+      omero_web_apps_top_links:
+        - label: Figure
+          link: figure_index
+          attrs:
+            title: Open Figure in new tab
+            target: _blank
+        - label: Tag Search
+          link: tagsearch
+        - label: Key-Value
+          link:
+            viewname: maprindex_keyvalue
+          attrs:
+          title: Search for manually-added Key-Value pairs
+
+  vars:
+    omero_web_public_password: public
+    omero_figure_release: "{{ omero_figure_release_override | default('4.4.1') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.10.2') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.4.1') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.1') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"

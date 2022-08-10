@@ -1,5 +1,4 @@
 ---
-
 - hosts: monitored
   tasks:
     - name: Update all packages

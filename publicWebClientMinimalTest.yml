@@ -1,0 +1,23 @@
+# functional minimal install of public omero.web on a separate server from omero.server
+# breaks upon reboot of omero.server
+- hosts: national_omero_repo
+  roles:
+    - role: ome.basedeps
+    - role: ome.omero_web
+      #omero_web_systemd_limit_nofile: 16384
+      omero_web_config_set:
+        omero.web.session_cookie_secure: true
+        omero.web.csrf_cookie_secure: true
+        omero.web.public.enabled: true
+        omero.web.public.server_id: 1
+        omero.web.public.user: public
+        omero.web.public.password: "{{ omero_web_public_password }}"
+        omero.web.public.url_filter: "^/(webadmin/myphoto/|webclient/\
+          (?!(action|logout|annotate_(file|tags|comment|rating|map)|\
+          script_ui|ome_tiff|figure_script))|\
+          webgateway/(?!(archived_files|download_as))\
+          |iviewer/|mapr/|figure/)"
+        # omero.web.server_list:
+        #   - ['206.12.94.73', 4064, omero]
+  vars:
+    omero_web_public_password: public
