@@ -52,11 +52,11 @@
             </div>
 
 	    {% if public_enabled %}
-            <hr class="login-divider"/>
-            <div class="login-link">
-                <a class="login-link-text" href="{{ public_login_redirect }}">Log in as public user</a>
-            </div>
-        {% endif %}
+                <hr class="login-divider"/>
+                <div class="login-link">
+                    <a class="login-link-text" href="{{ public_login_redirect }}">Log in as public user</a>
+                </div>
+            {% endif %}
 
     </form>
 
@@ -72,7 +72,7 @@
 		For more information, visit <a href="https://www.openmicroscopy.org">openmicroscopy.org</a><br/>
 		<br/>
 		This instance of OMERO is provisioned on cloud resources provided by the Digital Research Alliance of Canada<br/>
-        For more information, visit <a href="https://alliancecan.ca/en">Digital Research Alliance of Canada</a><br/>
+                For more information, visit <a href="https://alliancecan.ca/en">Digital Research Alliance of Canada</a><br/>
 
         <img src="{% static 'webgateway/img/OME_logo_grey_110.png' %}"/>
     </p>
